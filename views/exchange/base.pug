@@ -30,7 +30,7 @@ block main
 							li #[a(href='/exchange/profile') Recently Viewed]
 
 					div.bd-toc-item.active
-						a.bd-toc-link(href='/exchange/profile') Markets
+						a.bd-toc-link(href='/exchange/markets') Markets
 						ul.nav.bd-sidenav
 							li #[a(href='/exchange/profile') Newcomers]
 							li #[a(href='/exchange/profile') Most Actives]
@@ -38,10 +38,11 @@ block main
 							li #[a(href='/exchange/profile') Losers]
 
 					div.bd-toc-item.active
-						a.bd-toc-link(href='/exchange/profile') Trade
+						a.bd-toc-link(href='/exchange/trade') Trade
 						ul.nav.bd-sidenav
-							li #[a(href='/exchange/profile') Open Trades]
-							li #[a(href='/exchange/profile') Failed Trades]
+							li #[a(href='/exchange/trade/open') Open Trades]
+							li #[a(href='/exchange/trade/failed') Failed Trades]
+							li #[a(href='/exchange/trade/history') Trade History]
 
 			main.col-12.col-md-9.col-xl-10.px-md-5.py-md-3.bd-content
 				block content

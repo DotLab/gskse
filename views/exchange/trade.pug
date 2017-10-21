@@ -1,0 +1,94 @@
+extends base
+
+include ../alerts
+
+block content
+	h1.bd-title= __('common-gskse')
+	p #[span(style='color: #a62436') Market is current colse.] Opens in 2 days 11 hours 28 minutes.
+
+	div.row
+		div.col-md-6
+			h2.h5.font-weight-normal Order Stock
+			hr.mt-0
+
+			form(method='post')
+				div.row.form-group
+					label.col-sm-4.col-form-label Symbol
+					div.col-sm-8
+						input.form-control(type='text', name='symbol', value=body.symbol)
+				div.row.form-group
+					label.col-sm-4.col-form-label Quantity
+					div.col-sm-8
+						input.form-control(type='text', name='quantity', value=body.quantity)
+				div.row.form-group
+					label.col-sm-4.col-form-label Transaction
+					div.col-sm-4
+						select.custom-select.form-control
+							option Buy
+							option Sell
+					div.col-sm-4.pl-0
+						select.custom-select.form-control
+							option Limit
+							option Stop
+				div.row.form-group
+					label.col-sm-4.col-form-label Price
+					div.col-sm-8.input-group
+						span.input-group-addon $
+						input.form-control(type='text', name='price', value=body.price)
+				div.row.form-group
+					label.col-sm-4.col-form-label Duration
+					div.col-sm-8
+						select.custom-select.form-control
+							option Day
+							option Good Til Canceled
+							//- option Immediate Or Cancel
+							//- option Fill Or Kill
+							//- option All Or None
+							//- option One Minute
+							//- option Three Minutes
+							//- option Five Minutes
+				br
+
+				button.btn.btn-lg.btn-danger Submit Order
+		div.col-md-6
+			h2.h5.font-weight-normal Account Details
+			hr.mt-0
+
+			dl.row
+				dd.col-sm-6 Values
+				dt.col-sm-6.text-right $100,000.00
+
+				dd.col-sm-6 Buying Power
+				dt.col-sm-6.text-right $100,000.00
+
+				dd.col-sm-6 Cash
+				dt.col-sm-6.text-right $100,000.00
+
+			div.card.bg-light
+				div.card-body
+					table(width='100%')
+						tbody
+							tr.h5
+								td.card-title
+									span.mr-2.py-1.px-2(style='background: #090; color: white') AAPL
+									span.text-weight-normal Apple Inc.
+								td.text-right(style='color: #090') 0.00
+					br
+					dl.row.mb-0
+						dd.col-sm-6 Last
+						dt.col-sm-6.text-right $156.25
+
+						dd.col-sm-6 Change
+						dt.col-sm-6.text-right(style='color: #090') $0.00 &uarr;
+
+						dd.col-sm-6 % Change
+						dt.col-sm-6.text-right(style='color: #090') 0.00% &uarr;
+
+						dd.col-sm-6 Volume
+						dt.col-sm-6.text-right 23,345,345
+
+						dd.col-sm-6 Day's High
+						dt.col-sm-6.text-right $123.23
+
+						dd.col-sm-6 Day's Low
+						dt.col-sm-6.text-right $100.00
