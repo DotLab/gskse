@@ -1,0 +1,67 @@
+extends base
+
+block content
+	h1.bd-title= __('common-gskse')
+	p #[span(style='color: #a62436') Market is current colse.] Opens in 2 days 11 hours 28 minutes.
+
+	p
+		span.mr-3.d-inline-block #[strong Account Value] $100,000,000.00
+		span.mr-3.d-inline-block #[strong Buying Power] $100,000,000.00
+		span.mr-3.d-inline-block #[strong Cash] $100,000,000.00
+		span.mr-3.d-inline-block #[strong Annual Return] 0.00 %
+
+	h2 Stock Protfolio
+	div.table-responsive
+		table.table.table-sm.table-hover
+			thead
+				tr
+					th
+					th.small Symbol
+					th.small Name
+					th.small Quantity
+					th.small Purchase Price
+					th.small Current Price
+					th.small Total Value
+					th.small Today's Gain/Loss
+					th.small Total Gain/Loss
+			tbody
+				tr
+					td.small.font-weight-bold #[a(href='#') Sell]
+					td.small.font-weight-bold UNH
+					td.small.font-weight-bold UnitedHealth Group Inc.
+					td.small.font-weight-bold 520
+					td.small.font-weight-bold $117.94
+					td.small.font-weight-bold $119.08
+					td.small.font-weight-bold $61,921.60
+					td.small.font-weight-bold(style='color: #090') $192.40(0.31%) &uarr;
+					td.small.font-weight-bold(style='color: #090') $590.80(0.96%) &uarr;
+				tr
+					td.small.font-weight-bold #[a(href='#') Sell]
+					td.small.font-weight-bold UNH
+					td.small.font-weight-bold UnitedHealth Group Inc.
+					td.small.font-weight-bold 520
+					td.small.font-weight-bold $117.94
+					td.small.font-weight-bold $119.08
+					td.small.font-weight-bold $61,921.60
+					td.small.font-weight-bold(style='color: #090') $192.40(0.31%) &uarr;
+					td.small.font-weight-bold(style='color: #090') $590.80(0.96%) &uarr;
+				tr
+					td.small.font-weight-bold #[a(href='#') Sell]
+					td.small.font-weight-bold UNH
+					td.small.font-weight-bold UnitedHealth Group Inc.
+					td.small.font-weight-bold 520
+					td.small.font-weight-bold $117.94
+					td.small.font-weight-bold $119.08
+					td.small.font-weight-bold $61,921.60
+					td.small.font-weight-bold(style='color: #090') $192.40(0.31%) &uarr;
+					td.small.font-weight-bold(style='color: #090') $590.80(0.96%) &uarr;
+				tr
+					td
+					td
+					td
+					td
+					td
+					td.small.font-weight-bold Total
+					td.small.font-weight-bold $556,304.60
+					td.small.font-weight-bold(style='color: #090') $4,554.40(0.88%) &uarr;
+					td.small.font-weight-bold(style='color: #090') $25,820.80(4.87%) &uarr;

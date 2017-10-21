@@ -1,0 +1,12 @@
+extends base
+
+include navbar
+
+block main
+	+navbar(0)
+
+	div.container
+		h1.my-4 #{error.name} #[small.text-muted= error.message]
+		
+		if (error.stack)
+			pre.rounded.px-3.py-2= error.stack

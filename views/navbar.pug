@@ -1,0 +1,21 @@
+mixin navbar(i)
+	header.navbar.navbar-expand.navbar-dark.flex-column.flex-md-row.bd-navbar
+		a.navbar-brand.ml-0.ml-md-1.mr-0.mr-md-2(href='/') GSKSE
+
+		div.navbar-nav-scroll
+			nav.navbar-nav
+				a.nav-link(href='/exchange', class=(!--i) && 'active') Stock Exchange
+				a.nav-link(href='/venture', class=(!--i) && 'active') Venture Capital
+				a.nav-link(href='/regulation', class=(!--i) && 'active') Regulation
+
+		div.navbar-nav-scroll.ml-auto
+			nav.navbar-nav
+				div.nav-item.dropdown
+					a.nav-item.nav-link.dropdown-toggle.mr-2(href='#', data-toggle='dropdown')= __('common-locale')
+					div.dropdown-menu.dropdown-menu-right
+						a.dropdown-item(href='/locale/en', class=(locale == 'en') && 'active') English
+						a.dropdown-item(href='/locale/zh-hans', class=(locale == 'zh-hans') && 'active') 简体中文
+						a.dropdown-item(href='/locale/zh-hant', class=(locale == 'zh-hant') && 'active') 正體中文
+						a.dropdown-item(href='/locale/ja', class=(locale == 'ja') && 'active') 日本語
+
+				a.btn.btn-bd-yellow(href='#') Login

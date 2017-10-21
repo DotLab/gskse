@@ -1,0 +1,47 @@
+extends ../base
+
+include ../navbar
+
+block main
+	+navbar(1)
+
+	div.container-fluid
+		div.row.flex-xl-nowrap
+			div.col-12.col-md-3.col-xl-2.bd-sidebar
+				form.bd-search.d-flex.align-items-center
+					input.form-control.ds-input(placeholder='Search...', autocomplete='off')
+					button.btn.btn-link.bd-search-docs-toggle.d-md-none.p-0.ml-3.collapsed(data-toggle='collapse', data-target='#bd-docs-nav')
+						svg(xmlns='http://www.w3.org/2000/svg', viewBox='0 0 30 30', width='30', height='30').align-middle
+							path(stroke='currentColor', stroke-width='2', stroke-linecap='round', stroke-miterlimit='10', d='M4 7h22M4 15h22M4 23h22')
+				nav#bd-docs-nav.collapse.bd-links
+					div.bd-toc-item.active
+						a.bd-toc-link(href='/exchange/profile') Profile
+						ul.nav.bd-sidenav
+							li #[a(href='/exchange/profile/edit') Edit Profile]
+
+					div.bd-toc-item.active
+						a.bd-toc-link(href='/exchange/portfolio') Portfolio
+						ul.nav.bd-sidenav
+							li #[a(href='/exchange/portfolio/trade') Trade History]
+
+					div.bd-toc-item.active
+						a.bd-toc-link(href='/exchange/watchlist') Watchlist
+						ul.nav.bd-sidenav
+							li #[a(href='/exchange/profile') Recently Viewed]
+
+					div.bd-toc-item.active
+						a.bd-toc-link(href='/exchange/profile') Markets
+						ul.nav.bd-sidenav
+							li #[a(href='/exchange/profile') Newcomers]
+							li #[a(href='/exchange/profile') Most Actives]
+							li #[a(href='/exchange/profile') Gainers]
+							li #[a(href='/exchange/profile') Losers]
+
+					div.bd-toc-item.active
+						a.bd-toc-link(href='/exchange/profile') Trade
+						ul.nav.bd-sidenav
+							li #[a(href='/exchange/profile') Open Trades]
+							li #[a(href='/exchange/profile') Failed Trades]
+
+			main.col-12.col-md-9.col-xl-10.px-md-5.py-md-3.bd-content
+				block content

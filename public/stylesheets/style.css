@@ -1,0 +1,134 @@
+/*div {
+	border-width: 1px;
+	border-color: black;
+	border-style: dotted;
+}*/
+
+.shadow-card {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 16px 0 rgba(0, 0, 0, 0.2)
+}
+
+.shadow-item {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2)
+}
+
+.height-64 { height: 64px; }
+.height-128 { height: 128px; }
+.height-100 { height: 100px; }
+.height-200 { height: 200px; }
+
+.outline-1 {
+	text-shadow: -2px 0 2px rgba(0, 0, 0, 0.35)
+}
+
+.text-plain {
+	text-decoration: none;
+}
+
+pre {
+	color: #f8f8f2;
+	background: #23241f;
+
+	display: block;
+	overflow-x: auto;
+	padding: 0.5rem 1rem;
+	border-radius: 0.25rem;
+
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+}
+
+pre .diff-remove {
+	text-decoration: line-through;
+	color: #f92672;
+	background-color: #1E0010;
+}
+
+pre .diff-add {
+	background: #13354A;
+	color: #a6e22e;
+}
+
+.text-ellip {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.size-full { width: 100%; height: 100% }
+
+.size-card { width: 512px; height: 720px }
+.size-card-sm { width: 256px; height: 360px }
+
+.size-icon { width: 256px; height: 256px }
+.size-icon-sm { width: 128px; height: 128px }
+
+.abs { position: absolute; }
+
+.red { background: red; }
+.blue { background: blue; }
+.cyan { background: cyan; }
+.green { background: green; }
+.yellow { background: yellow; }
+
+.diff-remove {
+	text-decoration: line-through;
+	color: #A82400;
+	background-color: #E5BDB2;
+}
+
+.diff-add {
+	background: #D1E1AD;
+	color: #405A04;
+}
+
+.origin { transform-origin: 0 0 }
+
+.small { font-size: 80% }
+.tiny { font-size: 60% }
+
+.h7 { font-size: 0.75rem }
+
+.line-1 { line-height: 1 }
+
+.border-between > [class*='col-']:before {
+	background: #e3e3e3;
+	bottom: 0;
+	content: " ";
+	left: 0;
+	position: absolute;
+	width: 1px;
+	top: 0;
+}
+
+.border-between > [class*='col-']:first-child:before {
+	display: none;
+}
+
+.g-recaptcha {
+	transform-origin: 0 0;
+	transform: scale(0.925);
+}
+
+.tag:hover {
+	color: #33658a;
+	background-color: #cee0ed;
+	text-decoration: none;
+}
+
+.tag {
+	color: #39739d;
+	background-color: #E1ECF4;
+	text-decoration: none;
+
+	transition: all .15s ease-in-out;
+
+	display: inline-block;
+	padding: .4em .5em;
+	margin: 2px 2px 2px 0;
+	font-size: 1rem;
+	line-height: 1;
+	white-space: nowrap;
+	cursor: pointer;
+}

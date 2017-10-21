@@ -1,0 +1,73 @@
+extends base
+
+include ../alerts
+
+block content
+	h1.bd-title= title
+	hr
+
+	form(method='post')
+		+error_alerts(false, true)
+
+		div.row
+			div.col-md-6
+				div.form-group
+					label Name
+					input.form-control(type='text', name='name', value=body.name)
+			div.col-md-6
+				div.form-group
+					label Link
+					input.form-control(type='text', name='link', value=body.link)
+		div.row
+			div.col
+				div.form-group
+					label Signiture
+					input.form-control(type='text', name='signiture', value=body.signiture)
+
+		hr
+
+		div.row
+			div.col-lg-6
+				div.form-group
+					label About Me
+						a.ml-2(href='https://guides.github.com/features/mastering-markdown/', rel="noopener noreferrer" target="_blank") Markdown Guild
+					textarea#markdown.form-control(name='about_me')= body.about_me
+
+				button.btn.btn-lg.btn-primary(type='submit') Submit Edit
+			div.col-lg-6
+				div#cont_markdown
+
+block foot
+	script(src='https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked.min.js')
+
+	script.
+		// init markdown rendering
+		$(function () {
+			$('textarea').keyup();
+		});
+
+		// tab to 2 spaces
+		$('textarea').keydown(function(e) {
+			var keyCode = e.keyCode || e.which;
+
+			if (keyCode == 9) {
+				e.preventDefault();
+				var start = this.selectionStart;
+				var end = this.selectionEnd;
+
+				$(this).val($(this).val().substring(0, start) + '  ' + $(this).val().substring(end));
+				this.selectionStart = this.selectionEnd = start + 2;
+			}
+		});
+
+		// auto expend textarea
+		$('textarea').keyup(function (e) {
+			while($(this).outerHeight() < this.scrollHeight + parseFloat($(this).css('borderTopWidth')) + parseFloat($(this).css('borderBottomWidth'))) {
+				$(this).height($(this).height() + 1);
+			};
+		});
+		
+		// render markdown
+		$('#markdown').keyup(function (e) {
+			$('#cont_markdown').html(marked(this.value));
+		});

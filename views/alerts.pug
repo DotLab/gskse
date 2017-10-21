@@ -1,0 +1,41 @@
+mixin alert_success(title, message)
+	div.alert.alert-success
+		if title
+			|	#[strong #{title}:] #{message}
+		else
+			|	#{message}
+
+mixin alert_info(title, message)
+	div.alert.alert-info
+		if title
+			|	#[strong #{title}:] #{message}
+		else
+			|	#{message}
+
+mixin alert_warning(title, message)
+	div.alert.alert-warning
+		if title
+			|	#[strong #{title}:] #{message}
+		else
+			|	#{message}
+
+mixin alert_danger(title, message)
+	div.alert.alert-danger
+		if title
+			|	#[strong #{title}:] #{message}
+		else
+			|	#{message}
+
+//- errors ---------------------------------------------------------------------------
+mixin error_alerts(hr_top, hr_bottom)
+	if error || errors
+		if hr_top
+			hr
+		div.error_alerts
+			if error
+				+alert_danger(error.name, error.message)
+			if errors
+				for error in errors
+					+alert_danger(error.name, error.message)
+		if hr_bottom
+			hr
