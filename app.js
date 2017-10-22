@@ -62,7 +62,7 @@ app.use(cookieParser());
 // i18n ----------------------------------------------------------------------------------------------------
 var i18n = require('i18n');
 i18n.configure({
-	locales: [ 'en', 'zh-hans', 'zh-hant', 'ja' ],
+	locales: [ 'en', 'ja', 'zh-hans', 'zh-hant' ],
 	fallbacks: { 'zh': 'zh-hans' },
 	defaultLocale: 'en',
 	cookie: 'lang',
@@ -76,6 +76,13 @@ i18n.configure({
 	preserveLegacyCase: true
 });
 app.use(i18n.init);
+
+// helpers ----------------------------------------------------------------------------------------------------
+app.use(function (req, res, next) {
+	res.locals.__
+
+	next();
+});
 
 // routes ----------------------------------------------------------------------------------------------------
 var router = require('./routes/router');
