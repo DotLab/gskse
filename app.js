@@ -38,18 +38,6 @@ app.use(morgan('dev')); // log requests
 // static ----------------------------------------------------------------------------------------------------
 app.use(express.static(path.join(__dirname, 'public')));
 
-// session ----------------------------------------------------------------------------------------------------
-var crypto = require('crypto');
-var session = require('express-session');
-var MongoStore = require('connect-mongo')(session);
-app.use(session({
-	resave: false, // don't save session if unmodified
-	saveUninitialized: false, // don't create session until something stored
-	secret: crypto.randomBytes(512).toString('base64'),
-	store: new MongoStore({ mongooseConnection: mongoose.connection }),
-	cookie: { secure: true }
-}));
-
 // bodyParser ----------------------------------------------------------------------------------------------------
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
@@ -58,6 +46,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // cookieParser ----------------------------------------------------------------------------------------------------
 var cookieParser = require('cookie-parser');
 app.use(cookieParser());
+
+// session ----------------------------------------------------------------------------------------------------
+var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
+app.use(session({
+	resave: false, // don't save session if unmodified
+	saveUninitialized: false, // don't create session until something stored
+	secret: '此生无悔入东方，来世愿生幻想乡。',
+	store: new MongoStore({ mongooseConnection: mongoose.connection })
+}));
 
 // i18n ----------------------------------------------------------------------------------------------------
 var i18n = require('i18n');
@@ -77,11 +75,24 @@ i18n.configure({
 });
 app.use(i18n.init);
 
-// helpers ----------------------------------------------------------------------------------------------------
-app.use(function (req, res, next) {
-	res.locals.__
+// fileupload ----------------------------------------------------------------------------------------------------
+var fileupload = require('express-fileupload');
+app.use(fileupload());
 
-	next();
+// helpers ----------------------------------------------------------------------------------------------------
+var Friend = require('./models/friend');
+app.use(function (req, res, next) {
+	res.locals.nop = 'javascript:void(0)';
+	res.locals.getUrl = file => '/upload/' + file;
+	
+	debug(req.session.friend);
+	if (req.session.friend) {
+		Friend.findById(req.session.friend).exec().then(doc => {
+			if (doc != null) res.locals.friend = doc;
+		}).catch(err => next(err)).then(() => {
+			next();
+		});
+	} else next();
 });
 
 // routes ----------------------------------------------------------------------------------------------------

@@ -83,15 +83,6 @@ pre .diff-add {
 	color: #405A04;
 }
 
-.origin { transform-origin: 0 0 }
-
-.small { font-size: 80% }
-.tiny { font-size: 60% }
-
-.h7 { font-size: 0.75rem }
-
-.line-1 { line-height: 1 }
-
 .border-between > [class*='col-']:before {
 	background: #e3e3e3;
 	bottom: 0;
@@ -104,31 +95,4 @@ pre .diff-add {
 
 .border-between > [class*='col-']:first-child:before {
 	display: none;
-}
-
-.g-recaptcha {
-	transform-origin: 0 0;
-	transform: scale(0.925);
-}
-
-.tag:hover {
-	color: #33658a;
-	background-color: #cee0ed;
-	text-decoration: none;
-}
-
-.tag {
-	color: #39739d;
-	background-color: #E1ECF4;
-	text-decoration: none;
-
-	transition: all .15s ease-in-out;
-
-	display: inline-block;
-	padding: .4em .5em;
-	margin: 2px 2px 2px 0;
-	font-size: 1rem;
-	line-height: 1;
-	white-space: nowrap;
-	cursor: pointer;
 }

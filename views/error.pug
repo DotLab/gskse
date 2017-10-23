@@ -5,8 +5,9 @@ include navbar
 block main
 	+navbar(0)
 
-	div.container
-		h1.my-4 #{error.name} #[small.text-muted= error.message]
+	div.container.mt-4
+		h1= error.name
+		p= error.message
 		
 		if (error.stack)
-			pre.rounded.px-3.py-2= error.stack
+			pre.px-3.py-2= error.stack

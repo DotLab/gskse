@@ -1,0 +1,43 @@
+extends base
+
+include navbar
+
+block main
+	+navbar(1)
+
+	div.bg-light
+		div.container
+			nav.nav.nav-pills.nav-justified.small.p-2
+				a.nav-link(href='/login') Login
+				a.nav-link.active(href='/signup') Sign up
+
+
+	div.container.mt-4
+		div.row.justify-content-center
+			div.col-md-7.col-lg-5
+				div.card
+					div.card-body
+						h1.h3.card-title.text-center GSKSE Signup
+						hr.mt-0
+
+						form(method='post', encType='multipart/form-data')
+							div.form-group
+								label Avatar
+								label.custom-file.d-block
+									input.custom-file-input(required, type='file', name='avatar', accept='image/*', onchange='$("#avatar-text").html($(this).val());')
+									span#avatar-text.custom-file-control
+
+							div.form-group
+								label Name
+								input.form-control(required, type='text', name='name', placeholder='Kirito')
+							
+							div.form-group
+								label Password
+								input.form-control(required, type='password', name='password', placeholder='************')
+
+							div.form-group
+								label Confirm Password
+								input.form-control(required, type='password', name='password_confirm', placeholder='************')
+
+							button.btn.btn-lg.btn-danger.btn-block(type='submit') Signup
+
