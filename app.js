@@ -134,4 +134,50 @@ app.use(function (err, req, res, next) {
 	});
 });
 
+// cron ----------------------------------------------------------------------------------------------------
+var Friend = require('./models/friend');
+var Corp = require('./models/corp');
+var News = require('./models/news');
+
+var Job = require('cron').CronJob;
+new Job('*/2 * * * * *', function() {
+	debug('Fiscal year ended');
+
+	Corp.find().exec().then(docs => {
+		debug(docs.length + ' corporations');
+
+		docs.forEach(doc => {			
+			debug('Processing ' + doc.symbol);
+
+			var context = {};
+
+			News.aggregate([
+				{ $match: { corp: doc._id } },
+				{ $group: {
+					_id: doc._id,
+					click: { $sum: '$click' },
+					count: { $sum: 1 },
+				} },
+			]).exec().then(res => {
+				debug(res);
+				var profit = Math.round(res[0].count * res[0].click ** 1.5 * 3000);
+				debug(profit);
+
+				doc.profit = profit;
+
+				profit = Math.round(profit * 0.8);
+				doc.cash += Math.round(profit * 0.5);
+				context.profit = profit;
+
+				doc.save();
+
+				return Friend.findById(doc.ceo).exec();
+			}).then(ceo => {
+				ceo.cash += Math.round(context.profit * 0.05);
+				ceo.save();
+			});
+		});
+	}).catch(err => debug(err));
+}, null, true, 'America/Los_Angeles');
+
 module.exports = app;

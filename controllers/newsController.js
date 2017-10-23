@@ -54,6 +54,9 @@ exports.detail = function(req, res, next) {
 		if (!doc) throw new Error('Cannot find the corporation');
 
 		res.locals.news = doc;
+		
+		doc.click += 1;
+		doc.save();
 
 		res.render('news_detail');
 	}).catch(err => next(err));
