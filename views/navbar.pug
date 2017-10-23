@@ -24,6 +24,11 @@ mixin navbar(i)
 				if friend
 					div.dropdown
 						a.dropdown-toggle.nav-link(href=nop, data-toggle='dropdown')
+							i.fa.fa-plus
+						div.dropdown-menu.dropdown-menu-right
+							a.dropdown-item(href='/venture/new') New Venture
+					div.dropdown
+						a.dropdown-toggle.nav-link(href=nop, data-toggle='dropdown')
 							img.rounded(src=getUrl(friend.avatar), width='20', height='20')
 						div.dropdown-menu.dropdown-menu-right
 							h6.dropdown-header.py-1= friend.name

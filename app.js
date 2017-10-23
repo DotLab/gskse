@@ -83,12 +83,15 @@ app.use(fileupload());
 var Friend = require('./models/friend');
 app.use(function (req, res, next) {
 	res.locals.nop = 'javascript:void(0)';
-	res.locals.getUrl = file => '/upload/' + file;
+	res.locals.getUrl = (file => '/upload/' + file);
 	
 	debug(req.session.friend);
 	if (req.session.friend) {
 		Friend.findById(req.session.friend).exec().then(doc => {
-			if (doc != null) res.locals.friend = doc;
+			if (doc != null) {
+				req.friend = doc;
+				res.locals.friend = doc;
+			}
 		}).catch(err => next(err)).then(() => {
 			next();
 		});

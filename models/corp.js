@@ -3,9 +3,9 @@ var Schema = mongoose.Schema;
 
 var helper = require('./helper');
 
-var CompanySchema = new Schema({
+var CorpSchema = new Schema({
 	avatar: 	helper.string(),
-	name: 		helper.stringUnique(),
+	name: 		helper.string(),
 	desc: 		helper.string(),
 
 	symbol: 	helper.stringMatch(/^[A-Z]{1,4}$/),
@@ -28,4 +28,6 @@ var CompanySchema = new Schema({
 	is_offering:	helper.boolean(),
 });
 
-module.exports = mongoose.model('Company', CompanySchema);
+CorpSchema.index({ symbol: 1, locale: 1 }, { unique: true });
+
+module.exports = mongoose.model('Corp', CorpSchema);

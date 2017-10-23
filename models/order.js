@@ -5,7 +5,7 @@ var helper = require('./helper');
 
 var OrderSchema = new Schema({
 	friend: 	helper.ref('Friend'),
-	company: 	helper.ref('Company'),
+	corp: 		helper.ref('Corp'),
 
 	quantity: 	helper.number(),
 

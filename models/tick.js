@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 var helper = require('./helper');
 
 var TickSchema = new Schema({
-	company: 	helper.ref('Company'),
+	corp: 		helper.ref('Corp'),
 
 	date: 		helper.date(),
 
