@@ -6,8 +6,9 @@ block main
 	+navbar(0)
 
 	div.container.mt-4
-		h1= error.name
-		p= error.message
+		h1.display-4= error.name
+			small.font-weight-light.ml-3.text-muted= error.status
+		p.lead= error.message
 		
 		if (error.stack)
 			pre.px-3.py-2= error.stack

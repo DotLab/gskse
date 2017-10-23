@@ -1,0 +1,19 @@
+extends base
+
+include navbar
+
+block main
+	+navbar(1)
+
+	div.container.mt-4
+		a.text-muted(href= news.source)= getHost(news.source)
+		h1.my-0= news.title
+		p.lead= news.posted
+		hr.mt-0
+		
+		img.rounded.float-left.mr-2(src=getUrl(news.hero))
+		for para in news.content.split('\n')
+			p
+				span(style='font-size: 150%; font-family: "times","times new roman"; line-height: 1')= para[0]
+				span= para.substring(1)
+

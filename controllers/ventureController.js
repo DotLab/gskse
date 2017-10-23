@@ -7,6 +7,7 @@ var debug = require('debug')('gskse:ventureController');
 
 var Friend = require('../models/friend');
 var Corp = require('../models/corp');
+var News = require('../models/news');
 
 exports.new = function(req, res, next) {
 	res.render('venture_new');
@@ -58,6 +59,10 @@ exports.detail = function(req, res, next) {
 		if (!doc) throw new Error('Cannot find the corporation');
 
 		res.locals.corp = doc;
+
+		return News.find({ corp: doc.id }).exec();
+	}).then(docs => {
+		res.locals.news = docs;
 
 		res.render('venture_detail');
 	}).catch(err => next(err));

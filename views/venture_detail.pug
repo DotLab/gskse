@@ -60,12 +60,15 @@ block main
 
 				div
 					ul.list-unstyled
-						li.media.mb-3
-							img.mr-3.rounded.d-none.d-md-block(src=getUrl(corp.avatar), height='100px')
-							div.media-body
-								p.small.text-muted.mb-1 PR Newswire • 3 days ago
-								h5.mb-1 IberiaBank to acquire Coral Gables-based Gibraltar Private Bank Trust
-								p.small The holding company of IberiaBank announced late Thursday that it plans to acquire Coral Gables-based Gibraltar Private Bank & Trust Co. in an all-stock deal worth $223 million.  The deal still needs approval from Gibraltar's shareholders and regulators, but, if approved, it will be the second major acquisition of a South Florida bank by IberiaBank Corp. (IBKC).  In July, the Louisiana company finalized its acquisition of Miami-based Sabadell United Bank for about $1 billion – the largest purchase of a South Florida bank in a decade.
+						for ni in news
+							li.media.mb-3
+								a(href='/news/' + ni.id)
+									img.mr-3.rounded.d-none.d-md-block(src=getUrl(ni.hero), height='100px')
+								div.media-body
+									p.small.text-muted.mb-1 #{getHost(ni.source)} &bull; #{ni.posted}
+									h5.mb-1
+										a.text-dark(href='/news/' + ni.id)= ni.title
+									p.small= getSummary(ni.content)
 
 			div.col-xl-4
 				div.text-center

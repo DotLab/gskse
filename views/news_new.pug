@@ -1,0 +1,43 @@
+extends base
+
+include navbar
+
+block main
+	+navbar(1)
+
+	div.container.mt-4
+		h1.display-4 Post News
+		p.lead You know the drill...
+		hr.mt-0
+
+		form(method='post', encType='multipart/form-data')
+			div.row
+				div.col-md-6
+					div.form-group
+						label Hero
+						label.custom-file.d-block
+							input.custom-file-input(required, type='file', name='hero', accept='image/*', onchange='$("#hero-text").html($(this).val());')
+							span#hero-text.custom-file-control
+
+					div.form-group
+						label Title
+						input.form-control(required, type='text', name='title', placeholder='Premiere Report: Violet Evergarden Episodes 1-2')
+
+					div.form-group
+						label Source
+						input.form-control(required, type='url', name='source', placeholder='https://www.animenewsnetwork.com/feature/2017-10-23/premiere-report-violet-evergarden-episodes-1-2/.123078')
+					
+					div.form-group
+						label Company Symbol
+						input.form-control(required, type='text', name='symbol', placeholder='CC')
+
+					div.form-group
+						label Locale
+						input.form-control(readonly, type='text', value=__('common-locale'))
+						input.form-control(hidden, type='text', name='locale', value=locale)
+
+					button.btn.btn-lg.btn-primary.btn-block(type='submit') Post
+				div.col-md-6
+					div.form-group
+						label Content
+						textarea.form-control(required, type='text', name='content', rows='18', placeholder='Something unusual happened in May 2014. After 4 years of entries that didn\'t meet the standards of the judges, a manuscript finally won the Grand Prize in the Kyoto Animation Awards. That alone brought some attention to Violet Evergarden, but the entire world took notice at Taichi Ishidate\'s commercial for the first novel uploaded in May 2016 announcing that it would be adapted into a full anime project. Since then, the anticipation has been immense for this series, especially since Kyoto Animation is taking Ishidate on a World Tour to Los Angeles, Mannheim, and Singapore to preview the first episode. To give something special to Japanese fans, the Japanese premiere featured the first two episodes rather than just the first episode.')

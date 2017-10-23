@@ -22,4 +22,9 @@ router.get('/venture/new', ventureController.new);
 router.post('/venture/new', ventureController.new_post);
 router.get('/venture/:symbol', ventureController.detail);
 
+var newsController = require('../controllers/newsController');
+router.get('/news/new', newsController.new);
+router.post('/news/new', newsController.new_post);
+router.get('/news/:id', newsController.detail);
+
 module.exports = router;

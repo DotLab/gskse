@@ -84,6 +84,18 @@ var Friend = require('./models/friend');
 app.use(function (req, res, next) {
 	res.locals.nop = 'javascript:void(0)';
 	res.locals.getUrl = (file => '/upload/' + file);
+	res.locals.getSummary = (text => text.substring(0, Math.min(text.length, 100)) + '...');
+	res.locals.getHost = (url => {
+		var host;
+
+		if (url.indexOf("://") > -1) host = url.split('/')[2];
+		else host = url.split('/')[0];
+
+		host = host.split(':')[0];
+		host = host.split('?')[0];
+
+		return host;
+	});
 	
 	debug(req.session.friend);
 	if (req.session.friend) {
@@ -112,7 +124,9 @@ app.use(function (req, res, next) {
 
 // error handler
 app.use(function (err, req, res, next) {
-	res.status(err.status || 500);
+	err.status = err.status || 500;
+	
+	res.status(err.status);
 
 	res.render('error', { 
 		title: err.name, 
