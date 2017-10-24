@@ -1,0 +1,33 @@
+extends base
+
+block title
+	- title = 'Sign up'
+
+block content
+	h1.h4.card-title.text-center.font-weight-light GSKSE Sign up
+	hr.mt-0
+
+	form(method='post', encType='multipart/form-data')
+		div.form-group
+			label Avatar
+			label.custom-file.d-block
+				input.custom-file-input(required, type='file', name='avatar', accept='image/*', onchange='$("#avatar-text").html($(this).val());')
+				span#avatar-text.custom-file-control
+
+		div.form-group
+			label Name
+			input.form-control(required, type='text', name='name', placeholder='Kirito')
+		
+		div.form-group
+			label Password
+			input.form-control(required, type='password', name='password', placeholder='************')
+
+		div.form-group
+			label Confirm Password
+			input.form-control(required, type='password', name='password_confirm', placeholder='************')
+
+		div.form-group
+			button.btn.btn-lg.btn-danger.btn-block(type='submit') Sign up
+			
+	a.btn.btn-lg.btn-secondary.btn-block(href=url_friends_login()) Log in
+

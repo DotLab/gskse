@@ -1,0 +1,84 @@
+extends ../base
+
+block title
+	- title = corp.name
+
+block main
+	h1.h4 #{corp.name} (#{corp.symbol})
+	if corp.is_public
+		hr.my-0
+
+		h2.h1.my-0= printFloat(corp.price)
+			span.ml-2.small(style='color: #090') +0.71 (+19.22%)
+
+		br
+	else
+		p.lead Privately held company
+
+	nav.nav.nav-pills.nav-justified.small
+		a.nav-link.active(href=url_corps_symbol(corp.symbol)) Summary
+		if corp.is_public
+			a.nav-link(href=url_corps_symbol_chart(corp.symbol)) Chart
+		a.nav-link(href=url_corps_symbol_profile(corp.symbol)) Profile
+		if corp.is_public
+			a.nav-link(href=url_corps_symbol_holders(corp.symbol)) Holders
+			a.nav-link(href=url_corps_symbol_financials(corp.symbol)) Financials
+		a.nav-link(href=url_corps_symbol_conversations(corp.symbol)) Conversations
+		if corp.is_public
+			a.nav-link(href=url_corps_symbol_trade(corp.symbol)) Trade
+		else
+			a.nav-link(href=url_corps_symbol_invest(corp.symbol)) Invest
+	
+	div.row.mt-3
+		div.col-lg-8.col-md-12
+			if corp.is_public
+				div.row
+					div.col-lg-4
+						table.table.table-sm
+							tbody
+								tr
+									td Previous Close
+									th.text-right 4.21
+								tr
+									td Open
+									th.text-right 4.44
+								tr
+									td Bid
+									th.text-right 4.21 x 123
+								tr
+									td Ask
+									th.text-right 4.32 x 123
+								tr
+									td Day's Range
+									th.text-right 4.21 - 3.32
+								tr
+									td 52 Week Range
+									th.text-right 4.30 - 3.33
+								tr
+									td Volume
+									th.text-right 310
+					div.col-lg-8.red Chart
+
+				br
+
+			div
+				ul.list-unstyled
+					for n in news
+						li.media.mb-3
+							a(href=url_news_id(n.id))
+								img.mr-3.rounded.d-none.d-md-block(src=getSrc(n.hero), height='100px')
+							div.media-body
+								p.small.text-muted.mb-1 #{getHost(n.source)} &bull; #{n.posted}
+								h5.mb-1
+									a.text-dark(href=url_news_id(n.id))= n.title
+								p.small= getSummary(n.content)
+
+		div.col-lg-4.d-none.d-lg-block
+			div.text-center
+				img.rounded(src=getSrc(corp.avatar))
+
+			br
+
+			for para in corp.desc.split('\n')
+				if para.length > 1
+					p= para

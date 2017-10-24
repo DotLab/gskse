@@ -1,4 +1,6 @@
 {
-	"common-gskse": "幻想乡证券交易所",
-	"common-locale": "简体中文"
+	"com": {
+		"gskse": "幻想乡证券交易所",
+		"locale": "简体中文"
+	},
 }

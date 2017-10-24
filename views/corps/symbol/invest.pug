@@ -1,0 +1,36 @@
+extends ../base
+
+block main
+	h1.display-4 Venture Capital
+	p.lead ...is you!
+	hr.mt-0
+
+	form(method='post', encType='multipart/form-data')
+		div.row
+			div.col-md-6
+				div.form-group
+					label Avatar
+					label.custom-file.d-block
+						input.custom-file-input(required, type='file', name='avatar', accept='image/*', onchange='$("#avatar-text").html($(this).val());')
+						span#avatar-text.custom-file-control
+
+				div.form-group
+					label Name
+					input.form-control(required, type='text', name='name', placeholder='C.C.')
+				
+				div.form-group
+					label Company Symbol
+					input.form-control(required, type='text', name='symbol', placeholder='CC')
+
+				div.form-group
+					label Locale
+					input.form-control(readonly, type='text', value=__('com.locale'))
+					input.form-control(hidden, type='text', name='locale', value=locale)
+
+				button.btn.btn-lg.btn-danger.btn-block(type='submit') Signup
+			div.col-md-6
+				div.card.bg-light.m-4
+					div.card-body
+						h5.card-title CC
+							samll.font-weight-light.ml-2.text-muted Privately held
+						p.card-text sdf

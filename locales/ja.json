@@ -1,4 +1,6 @@
 {
-	"common-gskse": "幻想郷証券取引所",
-	"common-locale": "日本語"
+	"com": {
+		"gskse": "幻想郷証券取引所",
+		"locale": "日本語"
+	},
 }

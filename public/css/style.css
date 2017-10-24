@@ -4,6 +4,32 @@
 	border-style: dotted;
 }*/
 
+.dropdown-menu {
+	box-shadow: 0 3px 12px rgba(27,31,35,0.1);
+}
+
+.bg-blue { background-color: #007bff !important }
+.bg-indigo { background-color: #6610f2 !important }
+.bg-purple { background-color: #6f42c1 !important }
+.bg-pink { background-color: #e83e8c !important }
+.bg-red { background-color: #dc3545 !important }
+.bg-orange { background-color: #fd7e14 !important }
+.bg-yellow { background-color: #ffc107 !important }
+.bg-green { background-color: #28a745 !important }
+.bg-teal { background-color: #20c997 !important }
+.bg-cyan { background-color: #17a2b8 !important }
+
+.text-blue { color: #007bff !important }
+.text-indigo { color: #6610f2 !important }
+.text-purple { color: #6f42c1 !important }
+.text-pink { color: #e83e8c !important }
+.text-red { color: #dc3545 !important }
+.text-orange { color: #fd7e14 !important }
+.text-yellow { color: #ffc107 !important }
+.text-green { color: #28a745 !important }
+.text-teal { color: #20c997 !important }
+.text-cyan { color: #17a2b8 !important }
+
 .shadow-card {
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 16px 0 rgba(0, 0, 0, 0.2)
 }

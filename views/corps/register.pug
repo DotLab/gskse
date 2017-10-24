@@ -1,0 +1,38 @@
+extends base
+
+block title
+	- title = 'Register Corporation'
+
+block main
+	h1.display-4 New Journey
+	p.lead Start from here...
+	hr.mt-0
+
+	form(method='post', encType='multipart/form-data')
+		div.row
+			div.col-md-6
+				div.form-group
+					label Avatar
+					label.custom-file.d-block
+						input.custom-file-input(required, type='file', name='avatar', accept='image/*', onchange='$("#avatar-text").html($(this).val());')
+						span#avatar-text.custom-file-control
+
+				div.form-group
+					label Name
+					input.form-control(required, type='text', name='name', placeholder='C.C.')
+				
+				div.form-group
+					label Symbol
+					input.form-control(required, type='text', name='symbol', placeholder='CC')
+
+				div.form-group
+					label Locale
+					input.form-control(readonly, type='text', value=__('com.locale'))
+					input.form-control(hidden, type='text', name='locale', value=locale)
+
+				button.btn.btn-lg.btn-danger.btn-block(type='submit') Register
+				label.text-muted.small By clicking Register, you agree to pay #[strong $300] non-refundable legal costs to register the company.
+			div.col-md-6
+				div.form-group
+					label Description
+					textarea.form-control(required, type='text', name='desc', rows='14', placeholder='C.C. (シー・ツー Shī Tsū, pronounced C2) (しーつー), is the tritagonist of Code Geass: Lelouch of the Rebellion.')

@@ -1,0 +1,23 @@
+extends base
+
+block title
+	- title = 'Log in'
+
+block content
+	h1.h4.card-title.text-center.font-weight-light GSKSE Log in
+	hr.mt-0
+
+	form(method='post')
+		div.form-group
+			label Name
+			input.form-control(type='text', name='name', placeholder='Kirito')
+		
+		div.form-group
+			label Password
+			input.form-control(type='password', name='password', placeholder='************')
+
+		div.form-group
+			button.btn.btn-lg.btn-primary.btn-block(type='submit') Log in
+
+	a.btn.btn-lg.btn-secondary.btn-block(href=url_friends_signup()) Sign up
+

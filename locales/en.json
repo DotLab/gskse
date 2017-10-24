@@ -1,4 +1,6 @@
 {
-	"common-gskse": "Gensokyo Stock Exchange",
-	"common-locale": "English"
+	"com": {
+		"gskse": "Gensokyo Stock Exchange",
+		"locale": "English"
+	}
 }
