@@ -44,7 +44,27 @@ router.get('/trade', function(req, res, next) {
 });
 
 router.post('/trade', function(req, res, next) {
-	res.render('corps/symbol/trade');
+	Order.create({
+		friend: res.locals.friend._id,
+		corp: res.locals.corp._id,
+
+		quantity: req.body.quantity,
+
+		action: req.body.action,
+		type: req.body.type,
+
+		placed: Date.now(),
+		expired: new Date(0),
+		filled: new Date(0),
+
+		price: req.body.type == 'market' ? 0 : req.body.price,
+		deal: 0,
+
+		is_expired: false,
+		is_filled: false,
+	}).then(order => {
+		res.send(order);
+	}).catch(err => next(err));
 });
 
 router.get('/invest', function(req, res, next) {
@@ -120,6 +140,33 @@ router.post('/invest', function(req, res, next) {
 		debug(stock);
 		res.redirect(url_corps_symbol_holders(res.locals.corp.symbol));
 	}).catch(err => next(err));
+});
+
+router.get('/offer', function(req, res, next) {
+	res.render('corps/symbol/offer');
+});
+
+router.post('/offer', function(req, res, next) {
+	var corp = res.locals.corp;
+	var friend = res.locals.friend;
+
+	if (!corp.is_public) {  // ipo
+		corp.is_public = true;
+		corp.ipo = Date.now();
+	}
+
+	corp.price = req.body.price;
+	corp.offer = req.body.quantity;
+	corp.is_offering = true;
+	corp.save();
+
+	Stock.findOne({ friend: friend._id, corp: corp._id }).then(stock => {
+		if (!stock) return;
+
+		stock.lock_up = gskse.funs.lock_up();
+		stock.is_locked = true;
+		stock.save();
+	})
 });
 
 module.exports = router;

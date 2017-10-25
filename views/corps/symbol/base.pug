@@ -5,7 +5,7 @@ block main
 	if corp.is_public
 		hr.my-0
 
-		h2.h1.my-0= printFloat(corp.price)
+		h2.h1.my-0= strFloat(corp.price)
 			span.ml-2.small(style='color: #090') +0.71 (+19.22%)
 
 		br
@@ -23,11 +23,12 @@ block main
 		//- a.nav-item.nav-link(href=url_corps_symbol_conversations(corp.symbol), class=setActive(nav=='conversations')) Conversations
 		if corp.is_public
 			a.nav-item.nav-link(href=url_corps_symbol_trade(corp.symbol), class=setActive(nav=='trade')) Trade
-			a.nav-item.nav-link(href=url_corps_symbol_trade(corp.symbol), class=setActive(nav=='trade')) SPO
+			if is_ceo && !corp.is_offering
+				a.nav-item.nav-link(href=url_corps_symbol_offer(corp.symbol), class=setActive(nav=='offer')) SPO
 		else
 			a.nav-item.nav-link(href=url_corps_symbol_invest(corp.symbol), class=setActive(nav=='invest')) Invest
-			if corp.profit > 1e8
-				a.nav-item.nav-link(href=url_corps_symbol_invest(corp.symbol), class=setActive(nav=='invest')) IPO
+			if is_ceo && corp.revenue > 300 && !corp.is_offering
+				a.nav-item.nav-link(href=url_corps_symbol_offer(corp.symbol), class=setActive(nav=='offer')) IPO
 	
 	div.row.mt-3
 		div.col-lg-9

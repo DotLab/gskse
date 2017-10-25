@@ -1,0 +1,86 @@
+extends base
+
+block var2
+	- title = 'Trade ' + corp.symbol
+	- nav = 'trade'
+
+block content
+	div.row
+		div.col-md-6
+			form(method='post')
+				div.form-group
+					label Company Symbol
+					input.form-control(readonly, type='text', name='symbol', value=corp.symbol)
+
+				div.form-group
+					label Locale
+					input.form-control(readonly, type='text', value=__('com.locale'))
+					input.form-control(hidden, type='text', name='locale', value=locale)
+
+				div.form-group
+					label Quantity
+					input.form-control(required, type='text', name='quantity')
+
+				div.form-group
+					label Transaction
+					div.row
+						div.col-sm-6
+							select(name='action').custom-select.form-control
+								option(value='buy') Buy
+								option(value='sell') Sell
+						div.col-sm-6.pl-0
+							select(name='type').custom-select.form-control
+								option(value='market') Market
+								option(value='limit') Limit
+
+				div.form-group
+					label Price
+					div.input-group
+						span.input-group-addon $
+						input.form-control(type='text', name='price')
+
+				div.form-group
+					label Duration
+					select(name='duration').custom-select.form-control
+							option(value='day') Day
+							option(value='gtc') Good Til Canceled
+							//- option Immediate Or Cancel
+							//- option Fill Or Kill
+							//- option All Or None
+							option(value='1m') One Minute
+							option(value='3m') Three Minutes
+							option(value='5m') Five Minutes
+
+				button.btn.btn-lg.btn-danger.btn-block Submit Order
+				label.text-muted.small You cannot view the financial reports and shareholders until you own a part of the company.
+
+		div.col-md-6
+			div.card.bg-light.my-3
+				div.card-body
+					h2.h5.card-title.font-weight-normal= friend.name
+					hr.mt-0
+
+					dl.row.card-text
+						dd.col-sm-6 Account Value
+						dt.col-sm-6.text-right= strSunshine(friend.value)
+
+						dd.col-sm-6 Buying Power
+						dt.col-sm-6.text-right= strSunshine(friend.cash)
+
+						dd.col-sm-6 Cash
+						dt.col-sm-6.text-right= strSunshine(friend.cash)
+
+			//- div.card.bg-light.my-3
+			//- 	div.card-body
+			//- 		h2.h5.card-title.font-weight-normal= friend.name
+			//- 		hr.mt-0
+
+			//- 		dl.row.card-text
+			//- 			dd.col-sm-6 Account Value
+			//- 			dt.col-sm-6.text-right= strSunshine(friend.value)
+
+			//- 			dd.col-sm-6 Buying Power
+			//- 			dt.col-sm-6.text-right= strSunshine(friend.cash)
+
+			//- 			dd.col-sm-6 Cash
+			//- 			dt.col-sm-6.text-right= strSunshine(friend.cash)

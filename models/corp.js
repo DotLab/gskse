@@ -12,6 +12,8 @@ var CorpSchema = new Schema({
 	locale: 	helper.stringEnum(helper.localeOption),
 
 	cash: 		helper.number(),
+	revenue: 	helper.number(),
+
 	stock: 		helper.number(),
 	offer: 		helper.number(),
 	price: 		helper.number(),

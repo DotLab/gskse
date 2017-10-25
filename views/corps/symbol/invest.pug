@@ -27,17 +27,17 @@ block content
 				label.text-muted.small You cannot view the financial reports and shareholders until you own a part of the company.
 
 			div.col-md-6
-				div.card.bg-light.m-4
+				div.card.bg-light.my-3
 					div.card-body
 						h2.h5.card-title.font-weight-normal= friend.name
 						hr.mt-0
 
 						dl.row.card-text
 							dd.col-sm-6 Account Value
-							dt.col-sm-6.text-right= strSunshineFull(friend.value)
+							dt.col-sm-6.text-right= strSunshine(friend.value)
 
 							dd.col-sm-6 Buying Power
-							dt.col-sm-6.text-right= strSunshineFull(friend.cash)
+							dt.col-sm-6.text-right= strSunshine(friend.cash)
 
 							dd.col-sm-6 Cash
-							dt.col-sm-6.text-right= strSunshineFull(friend.cash)
+							dt.col-sm-6.text-right= strSunshine(friend.cash)

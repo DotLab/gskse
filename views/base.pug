@@ -18,9 +18,10 @@
 		}),
 		setActive = (cond => cond && 'active');
 
-	var strIntFull = (val => val.toLocaleString('en', { style: 'decimal', minimumFractionDigits: 0, maximumFractionDigits: 0 })),
-		strFloatFull = (val => val.toLocaleString('en', { style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2 })),
-		strSunshineFull = (val => '$' + strFloatFull(val)),
+	var strInt = (val => val.toLocaleString('en', { style: 'decimal', minimumFractionDigits: 0, maximumFractionDigits: 0 })),
+		strFloat = (val => val.toLocaleString('en', { style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+		strPercent = (val => strFloat(val * 100) + '%');
+		strSunshine = (val => '$' + strFloat(val)),
 		strDateTime = (date => date.toLocaleString(locale)),
 		strDate = (date => date.toLocaleDateString(locale)),
 		strTime = (date => date.toLocaleTimeString(locale));
@@ -71,7 +72,7 @@ html(lang='en')
 								img.rounded(src=getSrc(friend.avatar), width='20', height='20')
 							div.dropdown-menu.dropdown-menu-right
 								h6.dropdown-header.py-1= friend.name
-								h6.dropdown-header.py-1.font-weight-light= strSunshineFull(friend.cash)
+								h6.dropdown-header.py-1.font-weight-light= strSunshine(friend.cash)
 								div.dropdown-divider
 								a.dropdown-item(href=url_corps_register()) Register Corp
 								a.dropdown-item(href=url_news_post()) Post News

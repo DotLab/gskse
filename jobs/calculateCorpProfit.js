@@ -46,6 +46,7 @@ module.exports = function() {
 
 			if (revenue <= 1) return;
 
+			corp.revenue = revenue;
 			corp.cash += earning;
 			corp.save();
 

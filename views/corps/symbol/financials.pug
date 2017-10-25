@@ -18,20 +18,20 @@ block content
 				tr
 					td.small Total Revenue
 					for report in reports
-						td.small.text-right= strIntFull(report.revenue)
+						td.small.text-right= strInt(report.revenue)
 				tr
 					td.small Tax Expenses
 					for report in reports
-						td.small.text-right= strIntFull(report.tax)
+						td.small.text-right= strInt(report.tax)
 				tr
 					td.small Operation Expenses
 					for report in reports
-						td.small.text-right= strIntFull(report.expense)
+						td.small.text-right= strInt(report.expense)
 				tr
 					td.small Dividends Paid
 					for report in reports
-						td.small.text-right= strIntFull(Math.round(report.expense * 0.95))
+						td.small.text-right= strInt(Math.round(report.expense * 0.95))
 				tr
 					td.small Net Income
 					for report in reports
-						td.small.text-right= strIntFull(report.earning)
+						td.small.text-right= strInt(report.earning)

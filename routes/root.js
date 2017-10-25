@@ -26,6 +26,7 @@ var router = require('express').Router();
 //corps/:symbol/conversations
 //corps/:symbol/trade
 //corps/:symbol/invest
+//corps/:symbol/offer
 
 //news
 //news/post
@@ -64,6 +65,7 @@ global.url_corps_symbol_financials = ((symbol) => `/corps/${symbol}/financials`)
 global.url_corps_symbol_conversations = ((symbol) => `/corps/${symbol}/conversations`),
 global.url_corps_symbol_trade = ((symbol) => `/corps/${symbol}/trade`),
 global.url_corps_symbol_invest = ((symbol) => `/corps/${symbol}/invest`),
+global.url_corps_symbol_offer = ((symbol) => `/corps/${symbol}/offer`),
 global.url_news = (() => `/news`),
 global.url_news_post = (() => `/news/post`),
 global.url_news_id = ((id) => `/news/${id}`),

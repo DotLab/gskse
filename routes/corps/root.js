@@ -37,7 +37,7 @@ router.post('/register', function(req, res, next) {
 			locale: req.body.locale,
 
 			cash: 0,
-			profit: 0,
+			revenue: 0,
 
 			stock: 0,
 			offer: 0,
@@ -61,6 +61,7 @@ router.use('/:symbol', function(req, res, next) {
 	Corp.findOne({ symbol: req.params.symbol, locale: res.locals.locale }).then(corp => {
 		if (!corp) throw new Error('Cannot find the corporation');
 		res.locals.corp = corp;
+		if (corp.ceo == res.locals.friend.id) res.locals.is_ceo = true;
 		return Promise.all([
 			Stock.findOne({ corp: corp._id, friend: res.locals.friend._id, quantity: { $gte: 0 } }),
 			Report.find({ corp: corp._id }).sort('-date').limit(5),

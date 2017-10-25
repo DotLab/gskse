@@ -1,0 +1,51 @@
+extends base
+
+block var2
+	- title = corp.symbol + ' Public Offer'
+	- nav = 'offer'
+
+block content
+	form(method='post')
+		div.row
+			div.col-md-6
+				div.form-group
+					label Company Symbol
+					input.form-control(readonly, type='text', name='symbol', value=corp.symbol)
+
+				div.form-group
+					label Locale
+					input.form-control(readonly, type='text', value=__('com.locale'))
+					input.form-control(hidden, type='text', name='locale', value=locale)
+
+				div.form-group
+					label Price
+					div.input-group
+						span.input-group-addon $
+						input.form-control(required, type='number', name='price', placeholder='100', min='0', max='200')
+
+				div.form-group
+					label Quantity
+					input.form-control(required, type='number', name='quantity', placeholder='10000', min='100')
+
+				button.btn.btn-lg.btn-danger.btn-block(type='submit') Create Public Offer
+				label.text-muted.small You cannot revert this action and your stocks will be locked up for a few days.
+
+			div.col-md-6
+				div.card.bg-light.my-3
+					div.card-body
+						h3.h6.card-title Breakdown
+						div.card-text
+							table.table.table-sm
+								tbody
+									tr
+										th= strIntFull(corp.stock)
+										td Number of Shares Issued
+									tr
+										th 100.00%
+										td % of Shares Held by All Insider
+									tr
+										th 0.00%
+										td % of Public Offerings
+									tr
+										th 0
+										td Number of Public Offerings
