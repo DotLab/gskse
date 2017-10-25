@@ -12,7 +12,7 @@ block main
 	else
 		p.lead Privately held company
 
-	nav.nav.nav-tabs.small
+	nav.nav.nav-pills.small
 		a.nav-item.nav-link(href=url_corps_symbol(corp.symbol), class=setActive(nav=='summary')) Summary
 		if corp.is_public
 			a.nav-item.nav-link(href=url_corps_symbol_chart(corp.symbol), class=setActive(nav=='chart')) Chart
@@ -23,14 +23,17 @@ block main
 		//- a.nav-item.nav-link(href=url_corps_symbol_conversations(corp.symbol), class=setActive(nav=='conversations')) Conversations
 		if corp.is_public
 			a.nav-item.nav-link(href=url_corps_symbol_trade(corp.symbol), class=setActive(nav=='trade')) Trade
+			a.nav-item.nav-link(href=url_corps_symbol_trade(corp.symbol), class=setActive(nav=='trade')) SPO
 		else
 			a.nav-item.nav-link(href=url_corps_symbol_invest(corp.symbol), class=setActive(nav=='invest')) Invest
+			if corp.profit > 1e8
+				a.nav-item.nav-link(href=url_corps_symbol_invest(corp.symbol), class=setActive(nav=='invest')) IPO
 	
 	div.row.mt-3
-		div.col-lg-9.col-md-12
+		div.col-lg-9
 			block content
 
-		div.col-lg-3.d-none.d-lg-block
+		div.col-lg-3
 			a.btn.btn-outline-primary.btn-block(href=url_news_post() + '?symbol=' + corp.symbol) Post News
 			div.mt-3.text-center
 				img.rounded(src=getSrc(corp.avatar))

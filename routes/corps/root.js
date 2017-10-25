@@ -28,7 +28,7 @@ router.post('/register', function(req, res, next) {
 		context.avatar = sha1 + '.jpeg';
 		return sharp(req.files.avatar.data).resize(128, 128).jpeg().toFile(getUploadPath(context.avatar));
 	}).then(info => {
-		return new Corp({
+		return Corp.create({
 			avatar: context.avatar,
 			name: req.body.name,
 			desc: req.body.desc,
@@ -51,7 +51,7 @@ router.post('/register', function(req, res, next) {
 
 			is_public: false,
 			is_offering: false,
-		}).save();
+		});
 	}).then(corp => {
 		res.redirect(url_corps_symbol(corp.symbol));
 	}).catch(err => next(err));

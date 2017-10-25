@@ -125,4 +125,48 @@ new Job('*/30 * * * * *', getJob('calculateCorpProfit'), null, true, 'America/Lo
 new Job('*/20 * * * * *', getJob('calculateFriendValue'), null, true, 'America/Los_Angeles');
 new Job('*/10 * * * * *', getJob('matchOrder'), null, true, 'America/Los_Angeles');
 
+// config ----------------------------------------------------------------------------------------------------
+global.gskse = {
+	start_fund: 10000,
+
+	avatar_width: 128,
+	avatar_height: 128,
+
+	corp_legal_fees: 300,
+	
+	corp_tax_rate: 0.2,
+	corp_ceo_cut: 0.05,
+	corp_revenue_cut: 0.5,
+	corp_dividen_cut: 0.25,  // 1 - corp_tax_rate - corp_ceo_cut - corp_revenue_cut
+
+	salary_tax_rate: 0.2,
+
+	po_revenue_threshold: 100000000,
+	po_lock_up_days: 3,
+	po_fees: 5000000,
+	po_cut: 0.08,
+
+	funs: {
+		corp_revenue: (g, c) => g * c ** 2 * 3000,
+		corp_revenue_break: r => {
+			var tax = Math.round(r * gskse.corp_tax_rate);
+			var ceo = Math.round(r * gskse.corp_ceo_cut);
+			var revenue = Math.round(r * gskse.corp_revenue_cut);
+			var dividen = r - tax - ceo - revenue;
+			return { tax: tax, ceo: ceo, revenue: revenue, dividen: dividen };
+		},
+
+		salary: s => Math.round(s * (1 - gskse.salary_tax_rate)),
+
+		po_lock_up: () => {
+			var lock_up = new Date(Date.now());
+			lock_up.setDate(lock_up.getDate() + gskse.po_lock_up_days);
+			return lock_up;
+		},
+		po_fund: f => Math.round(f * (1 - gskse.po_cut)),
+	}
+};
+debug(gskse.funs.salary(3000));
+debug(gskse.funs.po_lock_up());
+
 module.exports = app;
