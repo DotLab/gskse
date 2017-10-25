@@ -5,11 +5,9 @@ var Friend = getModel('friend');
 var Corp = getModel('corp');
 var News = getModel('news');
 
-var hasher = require('pbkdf2-password')();
 var sharp = require('sharp');
 var Rusha = require('rusha');
 var rusha = new Rusha();
-var path = require('path');
 
 router.get('/post', function(req, res, next) {
 	res.render('news/post');
@@ -18,7 +16,7 @@ router.get('/post', function(req, res, next) {
 router.post('/post', function(req, res, next) {
 	var context = {};
 
-	Corp.findOne({ symbol: req.body.symbol, locale: req.body.locale }).exec().then(doc => {
+	Corp.findOne({ symbol: req.body.symbol, locale: req.body.locale }).then(doc => {
 		if (!doc) throw new Error('No company found');
 
 		context.corp = doc;
@@ -31,7 +29,7 @@ router.post('/post', function(req, res, next) {
 		return sharp(req.files.hero.data).resize(256, 144).jpeg().toFile(getUploadPath(context.hero));
 	}).then(info => {
 		return new News({
-			friend: req.friend.id,
+			friend: res.locals.friend.id,
 			corp: context.corp.id,
 
 			hero: context.hero,
@@ -47,12 +45,12 @@ router.post('/post', function(req, res, next) {
 			click: 0,
 		}).save();
 	}).then(news => {
-		return res.send(news);
+		return res.redirect(url_news_id(news.id));
 	}).catch(err => next(err));
 });
 
 router.get('/:id', function(req, res, next) {
-	News.findById(req.params.id).exec().then(doc => {
+	News.findById(req.params.id).then(doc => {
 		if (!doc) throw new Error('Cannot find the corporation');
 
 		res.locals.news = doc;

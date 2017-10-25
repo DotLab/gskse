@@ -30,6 +30,13 @@
 .text-teal { color: #20c997 !important }
 .text-cyan { color: #17a2b8 !important }
 
+.line-1 { line-height: 1; }
+.line-9 { line-height: 0.9; }
+.line-8 { line-height: 0.8; }
+.line-7 { line-height: 0.7; }
+.line-6 { line-height: 0.6; }
+.line-5 { line-height: 0.5; }
+
 .shadow-card {
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 16px 0 rgba(0, 0, 0, 0.2)
 }

@@ -1,0 +1,89 @@
+extends ../base
+
+block main
+	h1.h4 #{corp.name} (#{corp.symbol})
+	if corp.is_public
+		hr.my-0
+
+		h2.h1.my-0= printFloat(corp.price)
+			span.ml-2.small(style='color: #090') +0.71 (+19.22%)
+
+		br
+	else
+		p.lead Privately held company
+
+	nav.nav.nav-tabs.small
+		a.nav-item.nav-link(href=url_corps_symbol(corp.symbol), class=setActive(nav=='summary')) Summary
+		if corp.is_public
+			a.nav-item.nav-link(href=url_corps_symbol_chart(corp.symbol), class=setActive(nav=='chart')) Chart
+		a.nav-item.nav-link(href=url_corps_symbol_profile(corp.symbol), class=setActive(nav=='profile')) Profile
+		if corp.is_public || is_holder
+			a.nav-item.nav-link(href=url_corps_symbol_holders(corp.symbol), class=setActive(nav=='holders')) Holders
+		a.nav-item.nav-link(href=url_corps_symbol_financials(corp.symbol), class=setActive(nav=='financials')) Financials
+		//- a.nav-item.nav-link(href=url_corps_symbol_conversations(corp.symbol), class=setActive(nav=='conversations')) Conversations
+		if corp.is_public
+			a.nav-item.nav-link(href=url_corps_symbol_trade(corp.symbol), class=setActive(nav=='trade')) Trade
+		else
+			a.nav-item.nav-link(href=url_corps_symbol_invest(corp.symbol), class=setActive(nav=='invest')) Invest
+	
+	div.row.mt-3
+		div.col-lg-9.col-md-12
+			block content
+
+		div.col-lg-3.d-none.d-lg-block
+			div.text-center
+				img.rounded(src=getSrc(corp.avatar))
+
+			br
+
+			p= corp.desc.split('\n')[0]
+
+			h2.h5.line-8.mb-0 Earnings
+			div#chart_earnings(style='width: 100%; height: 10rem')
+
+			br
+
+			h2.h5.line-8.mb-0 Financials
+			div#chart_financials(style='width: 100%; height: 10rem')
+
+block foot1
+	script.
+		xAxis = JSON.parse('!{JSON.stringify(reports.map(a => strDate(a.date)))}');
+		data = JSON.parse('!{JSON.stringify(reports.map(a => a.earning))}');
+
+		option = {
+			grid: { show: true, top: '10%', bottom: '12%', left: '15%' },
+			tooltip: { },
+			xAxis: { data: xAxis },
+			yAxis: { },
+			series: [ {
+				name: 'Earning',
+				type: 'scatter',
+				data: data,
+			} ],
+		};
+
+		chart_holders = echarts.init(document.getElementById('chart_earnings'));
+		chart_holders.setOption(option);
+
+		data2 = JSON.parse('!{JSON.stringify(reports.map(a => a.revenue))}');
+		
+		option = {
+			grid: { show: true, top: '10%', bottom: '12%', left: '15%' },
+			tooltip: { },
+			xAxis: { data: xAxis },
+			yAxis: { },
+			series: [ {
+				name: 'Revenue',
+				type: 'bar',
+				data: data2,
+			},
+			{
+				name: 'Earning',
+				type: 'bar',
+				data: data,
+			} ],
+		};
+
+		chart_holders = echarts.init(document.getElementById('chart_financials'));
+		chart_holders.setOption(option);

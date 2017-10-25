@@ -18,8 +18,16 @@
 		}),
 		setActive = (cond => cond && 'active');
 
-block section
-block title
+	var strIntFull = (val => val.toLocaleString('en', { style: 'decimal', minimumFractionDigits: 0, maximumFractionDigits: 0 })),
+		strFloatFull = (val => val.toLocaleString('en', { style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+		strSunshineFull = (val => '$' + strFloatFull(val)),
+		strDateTime = (date => date.toLocaleString(locale)),
+		strDate = (date => date.toLocaleDateString(locale)),
+		strTime = (date => date.toLocaleTimeString(locale));
+
+block var1
+block var2
+block var3
 
 doctype html
 
@@ -63,6 +71,7 @@ html(lang='en')
 								img.rounded(src=getSrc(friend.avatar), width='20', height='20')
 							div.dropdown-menu.dropdown-menu-right
 								h6.dropdown-header.py-1= friend.name
+								h6.dropdown-header.py-1.font-weight-light= strSunshineFull(friend.cash)
 								div.dropdown-divider
 								a.dropdown-item(href=url_corps_register()) Register Corp
 								a.dropdown-item(href=url_news_post()) Post News
@@ -77,10 +86,14 @@ html(lang='en')
 			block main
 
 		footer.mt-4.container
-			div.small.py-3.text-weight-light.text-muted © 2017 #{__('com.gskse')}
+			div.small.py-3.font-weight-light.text-muted © 2017 #{__('com.gskse')}
 
 		script(src='/vendor/jquery-3.2.1.min.js')
 		script(src='/vendor/popper.min.js')
 		script(src='/vendor/bootstrap.min.js')
 
-		block foot
+		script(src='/vendor/echarts.min.js')
+
+		block foot1
+		block foot2
+		block foot3

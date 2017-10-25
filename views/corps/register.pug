@@ -1,6 +1,6 @@
 extends base
 
-block title
+block var2
 	- title = 'Register Corporation'
 
 block main
@@ -31,7 +31,7 @@ block main
 					input.form-control(hidden, type='text', name='locale', value=locale)
 
 				button.btn.btn-lg.btn-danger.btn-block(type='submit') Register
-				label.text-muted.small By clicking Register, you agree to pay #[strong $300] non-refundable legal costs to register the company.
+				label.text-muted.small By clicking Register, you agree to pay $300 non-refundable legal costs to register the company.
 			div.col-md-6
 				div.form-group
 					label Description

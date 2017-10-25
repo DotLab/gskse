@@ -14,7 +14,7 @@ router.get('/login', function(req, res, next) {
 });
 
 router.post('/login', function(req, res, next) {
-	Friend.findOne({ name: req.body.name }).exec().then(doc => {
+	Friend.findOne({ name: req.body.name }).then(doc => {
 		if (!doc) throw new Error('Login failed');
 
 		return new Promise((resolve, reject) => {

@@ -13,7 +13,8 @@ debug('appRoot [%s]', appRoot);
 debug('getPath [%s]', getPath('routes', 'root'));
 
 // mongoose ----------------------------------------------------------------------------------------------------
-var mongoose = require('mongoose');//.set('debug', true);
+var mongoose = require('mongoose');
+// mongoose.set('debug', true);
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost:27017/gskse', {
 	useMongoClient: true,
@@ -28,8 +29,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 // morgan ----------------------------------------------------------------------------------------------------
-var morgan = require('morgan');
-app.use(morgan('dev')); // log requests
+// var morgan = require('morgan');
+// app.use(morgan('dev')); // log requests
 
 // static ----------------------------------------------------------------------------------------------------
 app.use(express.static(path.join(__dirname, 'public')));
@@ -38,6 +39,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+// fileupload ----------------------------------------------------------------------------------------------------
+var fileupload = require('express-fileupload');
+app.use(fileupload());
 
 // session ----------------------------------------------------------------------------------------------------
 var session = require('express-session');
@@ -66,22 +71,22 @@ i18n.configure({
 });
 app.use(i18n.init);
 
-// fileupload ----------------------------------------------------------------------------------------------------
-var fileupload = require('express-fileupload');
-app.use(fileupload());
-
 // helpers ----------------------------------------------------------------------------------------------------
 var Friend = getModel('friend');
 app.use(function(req, res, next) {
-	if (req.session.locale) i18n.setLocale([ req, res, res.locals ], req.session.locale);
+	var locale = req.session.locale;
+	if (locale) {
+		// debug(locale);
+		debug(i18n.setLocale(res, locale));
+		// debug(res.locale);
+		// debug(res.__('com.locale'));
+	}
 	
 	debug('friend [%s]', req.session.friend);
 	if (req.session.friend) {
-		Friend.findById(req.session.friend).exec().then(doc => {
-			if (doc != null) {
-				req.friend = doc;
-				res.friend = doc;
-				res.locals.friend = doc;
+		Friend.findById(req.session.friend).then(friend => {
+			if (friend != null) {
+				res.locals.friend = friend;
 			}
 		}).catch(err => next(err)).then(() => {
 			next();
@@ -101,7 +106,13 @@ app.use(function(req, res, next) {
 });
 
 // error handler
+var status_codes = require('./statusCodes');
 app.use(function(err, req, res, next) {
+	if (status_codes[err.message]) { 
+		err.status = err.message;
+		err.message = status_codes[err.message];
+	} 
+
 	err.status = err.status || 500;
 	
 	res.status(err.status);
@@ -114,7 +125,8 @@ app.use(function(err, req, res, next) {
 
 // cron ----------------------------------------------------------------------------------------------------
 var Job = require('cron').CronJob;
-new Job('*/5 * * * * *', getJob('calculateProfit'), null, true, 'America/Los_Angeles');
+new Job('*/30 * * * * *', getJob('calculateCorpProfit'), null, true, 'America/Los_Angeles');
+new Job('*/20 * * * * *', getJob('calculateFriendValue'), null, true, 'America/Los_Angeles');
 new Job('*/10 * * * * *', getJob('matchOrder'), null, true, 'America/Los_Angeles');
 
 module.exports = app;

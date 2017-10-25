@@ -1,0 +1,73 @@
+extends base
+
+block var2
+	- title = corp.name
+	- nav = 'holders'
+
+block content
+	h2.h5 Major Holders
+
+	div.row.mt-3.align-items-center
+		div.col-md-7
+			h3.h6 Breakdown
+			div
+				table.table.table-sm
+					tbody
+						tr
+							th= strIntFull(corp.stock)
+							td Number of Shares Issued
+						tr
+							th 100.00%
+							td % of Shares Held by All Insider
+						tr
+							th 0.00%
+							td % of Public Offerings
+						tr
+							th 0
+							td Number of Public Offerings
+		div.col-md-5
+			div#chart_holders(style='width: 100%; height:14rem')
+	
+	div
+		h3.h6 Roster
+		table.table.table-sm
+			thead
+				tr
+					th.small Individual or Entity
+					th.text-right.small Most Recent Transaction Date
+					th.text-right.small Shares Owned as of Transaction Date
+			tbody
+				- stocks.sort((a, b) => a.quantity < b.quantity)
+				for stock in stocks
+					tr
+						td
+							a(href=url_friends_name(stock.friend.name))= stock.friend.name
+							div
+								if friend.id == stock.friend.id
+									span Me, 
+								if corp.ceo == stock.friend.id
+									span CEO
+								else
+									span Shareholder
+						td.text-right.align-middle= strDateTime(stock.updated)
+						td.text-right.align-middle= strIntFull(stock.quantity)
+
+block foot2
+	script.
+		data = JSON.parse('!{JSON.stringify(stocks.map(a => { return { name: a.friend.name, value: a.quantity }; }))}');
+
+		option = {
+			tooltip: { 
+				trigger: 'item',
+				formatter: '{a} <br/>{b} : {c} ({d}%)',
+			},
+			series: [ {
+				name: 'Share',
+				type: 'pie',
+				data: data,
+				roseType: 'radius',
+			} ],
+		};
+
+		chart_holders = echarts.init(document.getElementById('chart_holders'));
+		chart_holders.setOption(option);

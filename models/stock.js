@@ -13,6 +13,8 @@ var StockSchema = new Schema({
 	value: 		helper.number(),  //= quantity * corp.stock_price
 	price: 		helper.number(),  //= spent / quantity
 
+	updated: 	helper.date(),
+
 	lock_up: 	helper.date(),  // cannot sell, can still buy
 
 	is_locked: 		helper.boolean(),

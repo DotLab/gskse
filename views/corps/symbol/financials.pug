@@ -1,0 +1,37 @@
+extends base
+
+block var2
+	- title = corp.name
+	- nav = 'financials'
+
+block content
+	h2.h5 Income Statement
+
+	div
+		table.table.table-sm
+			thead
+				tr
+					th Revenue
+					for report in reports
+						th.text-right.small.align-middle= strDate(report.date)
+			tbody
+				tr
+					td.small Total Revenue
+					for report in reports
+						td.small.text-right= strIntFull(report.revenue)
+				tr
+					td.small Tax Expenses
+					for report in reports
+						td.small.text-right= strIntFull(report.tax)
+				tr
+					td.small Operation Expenses
+					for report in reports
+						td.small.text-right= strIntFull(report.expense)
+				tr
+					td.small Dividends Paid
+					for report in reports
+						td.small.text-right= strIntFull(Math.round(report.expense * 0.95))
+				tr
+					td.small Net Income
+					for report in reports
+						td.small.text-right= strIntFull(report.earning)

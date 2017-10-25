@@ -1,0 +1,14 @@
+extends base
+
+block var2
+	- title = corp.name
+	- nav = 'profile'
+
+block content
+	for para in corp.desc.split('\n')
+		if para.length > 1
+			p
+				span(style='font-size: 150%; font-family: "times","times new roman"; line-height: 1')= para[0]
+				span= para.substring(1)
+
+	hr.mt-0

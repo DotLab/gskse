@@ -4,7 +4,7 @@ var ObjectId = require('mongoose').Schema.Types.ObjectId;
 exports.localeOption = [ 'en', 'ja', 'zh-hans', 'zh-hant' ];
 
 exports.orderAction = [ 'buy', 'sell' ];
-exports.orderType = [ 'limit', 'market' ];
+exports.orderType = [ 'private', 'limit', 'market' ];
 
 exports.locale = function(schema) {
 	return exports.localeOption.reduce(function(obj, value) {
