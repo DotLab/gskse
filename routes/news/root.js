@@ -50,7 +50,7 @@ router.post('/post', function(req, res, next) {
 });
 
 router.get('/:id', function(req, res, next) {
-	News.findById(req.params.id).then(doc => {
+	News.findById(req.params.id).populate('corp').then(doc => {
 		if (!doc) throw new Error('Cannot find the corporation');
 
 		res.locals.news = doc;

@@ -75,22 +75,18 @@ app.use(i18n.init);
 var Friend = getModel('friend');
 app.use(function(req, res, next) {
 	var locale = req.session.locale;
-	if (locale) {
-		// debug(locale);
-		debug(i18n.setLocale(res, locale));
-		// debug(res.locale);
-		// debug(res.__('com.locale'));
-	}
+	if (locale) i18n.setLocale(res, locale);
 	
-	debug('friend [%s]', req.session.friend);
+	res.locals.query = req.query;
+	res.locals.body = req.body;
+
+	// debug('friend [%s]', req.session.friend);
 	if (req.session.friend) {
 		Friend.findById(req.session.friend).then(friend => {
-			if (friend != null) {
-				res.locals.friend = friend;
-			}
-		}).catch(err => next(err)).then(() => {
+			if (friend != null) res.locals.friend = friend;
+
 			next();
-		});
+		}).catch(err => next(err));
 	} else next();
 });
 
