@@ -80,7 +80,47 @@ This allows very big move in the market.
 
 Now the corporation's profit includes the profits from trading stocks and the divident.
 
-## Stock Trade
-Do you know how to trade stocks?
+## Order Type
+Once a company become publicly traded, Friends can freely trade stocks.
+There are several type of orders available.
 
-I don't know.
+### Market Order
+A market order is the most basic type of trade order. It instructs the broker to buy (or sell) at the best price that is currently available. Order entry interfaces usually have "buy" and "sell" buttons to make these orders quick and easy, as shown in Figure 1. Typically, this type of order will be executed immediately. The primary advantage to using a market order is that the trader is guaranteed to get the trade filled. If a trader absolutely needs to get in or out of a trade, a market order is the most reliable order type. The downside, however, is that market orders do not guarantee price, and they do not allow any precision in order entry and can lead to costly slippage. Using market orders only in markets with good liquidity can help limit losses from slippage.
+
+Ideally, a market order to buy is filled at the ask price, and a market order to sell is filled at the bid price.
+It is essential to remember, however, that the last-traded price is not automatically the price at which a market order will be executed. This is especially true in fast-moving or thinly traded markets.
+
+Market Order to Buy (at the lowest ask price)
+
+Market Order to Sell (at the highest bid price)
+
+### Limit Order
+A limit order is an order to buy (or sell) at a specified price or better. A buy limit order (a limit order to buy) can only be executed at the specified limit price or lower. Conversely, a sell limit order (a limit order to sell) will be executed at the specified limit price or higher. Unlike a market order where the trader can simply press "buy" and let the market "choose" the price, a trader must specify a desired price when using a limit order. While a limit orders prevents negative slippage, it does not guarantee a fill. A limit order will only be filled if price reaches the specified limit price, and a trading opportunity could be missed if price moves away from the limit price before it can be filled. Note: the market can move to the limit price and the order still may not get filled if there are not enough buyers or sellers (depending on the trade direction) at that particular price level.
+
+Limit Order to Buy (at or below the limit price)
+
+Limit Order to Sell (at or above the limit price)
+
+### Stop Order
+A stop order to buy or sell becomes active only after a specified price level has been reached (the "stop level"). Stop orders work in the opposite direction of limit orders: a buy stop order is placed above the market, and a sell stop order is placed below the market (see Figure 4). Once the stop level has been reached, the order is automatically converted to a market or limit order (depending on the type of order that is specified). In this sense, a stop order acts as a trigger for the market or limit order.
+
+Consequently, stop orders are further defined as stop-market or stop-limit orders: a stop-market order sends a market order to the market once the stop level has been reached; a stop-limit order sends a limit order. Stop-market orders are perhaps the most commonly used since they are typically filled more consistently.
+
+## Order Duration
+You can further specify the duration that you want this to be active.
+
+### Day - DAY
+A day order automatically expires at the end of the regular trading session if it has not been executed. Many platforms use this as the default order duration. A "Day +" duration is valid until the end of the extended trading session.
+
+### Good-Til-Canceled - GTC
+A good-til-canceled order is active until the trade is executed or the trader cancels the order. Brokers typically cancel GTC orders automatically if they have not been filled in 30 days.
+
+### Good-Til-Date - GTD
+A GTD order remains active until a user-specified date, unless it has been filled or canceled.
+
+### Immediate-Or-Cancel - IOC
+An IOC requires all or part of the order to be executed immediately; otherwise, the order (or any unfilled parts of the order) will be canceled.
+
+### Fill-Or-Kill - FOK
+An FOK order must be filled immediately in its entirety or it will be canceled. Partial fills are not accepted with this type of order duration.
+
