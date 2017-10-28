@@ -124,3 +124,23 @@ An IOC requires all or part of the order to be executed immediately; otherwise, 
 ### Fill-Or-Kill - FOK
 An FOK order must be filled immediately in its entirety or it will be canceled. Partial fills are not accepted with this type of order duration.
 
+## Market Maker
+To ensure the liquidity of the market, GSKSE hires specialists called Market Makers to trade stocks day and night so that you will (almost) always have something to trade.
+
+The Market Maker will offer stocks to sell and buy if it has the Sunshine to do so.
+
+Market Makers start action with $10,000 after the IPO. They start buy offer a price to buy higher than the current highest bid. Than, they keep a book about all the stocks that they purchased, to determain the average price of its stocks. 
+
+They buy at the average price - spread and sell at the average price + spread. The spread is half of the average fluctuation of the stock price in the past Fiscal Year.
+
+They try to buy and sell using all the money and stocks they have.
+
+## Order Matching
+Every 1 or more seconds, GSKSE will try to match orders together. 
+
+1. Find the highest bid and lowest ask.
+2. If the hightest bid is higher than or equal to the lowest ask, start a matching.
+3. The Market Maker buy the exact trading quantity from the seller and sell to the buyer, making some Sunshine.
+4. Back to Step 1.
+5. Push the new Tick.
+6. Adjust the Market Maker's orders based on the transaction made.
