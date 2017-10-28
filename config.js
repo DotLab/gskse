@@ -1,3 +1,12 @@
+var path = require('path');
+
+exports.appRoot = path.resolve(__dirname);
+exports.getPath = function() { return Array.prototype.reduce.call(arguments, (a, b) => path.join(a, b), exports.appRoot); };
+exports.getUploadPath = file => exports.getPath('public', 'upload', file);
+exports.getModel = model => require(exports.getPath('models', model));
+exports.getController = model => require(exports.getPath('controllers', model));
+exports.getJob = job => require(exports.getPath('jobs', job));
+
 exports.epoch = new Date(0);
 exports.ghost = require('mongoose').Types.ObjectId('000000000000000000000000');
 

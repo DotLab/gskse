@@ -11,10 +11,7 @@ var FriendSchema = new Schema({
 	hash: 		helper.string(),
 
 	cash: 		helper.unsigned(),
-	pledge: 	helper.unsigned(),
 	
-	value: 		helper.unsigned(),  //= cash + pledge + <value of stocks owned>
-
 	joined: 	helper.date(),
 });
 
