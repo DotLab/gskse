@@ -1,3 +1,5 @@
+'use strict';
+
 var debug = require('debug')('gskse:app');
 
 // env ----------------------------------------------------------------------------------------------------
@@ -8,9 +10,15 @@ global.getPath = function() {
 };
 global.getUploadPath = (file => getPath('public', 'upload', file));
 global.getModel = (model => require(getPath('models', model)));
+global.getController = (model => require(getPath('controllers', model)));
 global.getJob = (job => require(getPath('jobs', job)));
 debug('appRoot [%s]', appRoot);
 debug('getPath [%s]', getPath('routes', 'root'));
+
+// config ----------------------------------------------------------------------------------------------------
+global.gskse = require('./config');
+debug(gskse.getSalary(3000));
+debug(gskse.getOfferLockUp());
 
 // mongoose ----------------------------------------------------------------------------------------------------
 var mongoose = require('mongoose');
@@ -95,78 +103,24 @@ app.use('/', require(getPath('routes', 'root')));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-	var err = new Error('Page Not Found: "' + req.url + '"');
-	err.status = 404;
-
-	next(err);
+	next(gskse.status.not_found);
 });
 
 // error handler
-var status_codes = require('./statusCodes');
 app.use(function(err, req, res, next) {
-	if (status_codes[err.message]) { 
-		err.status = err.message;
-		err.message = status_codes[err.message];
-	} 
-
 	err.status = err.status || 500;
+	err.name = err.name == 'Error' ? 'Internal Server Error' : err.name;
+	
+	res.locals.error = err;
 	
 	res.status(err.status);
-
-	res.render('error', { 
-		title: err.name, 
-		error: err
-	});
+	res.render('error');
 });
 
 // cron ----------------------------------------------------------------------------------------------------
 var Job = require('cron').CronJob;
-new Job('*/30 * * * * *', getJob('calculateCorpProfit'), null, true, 'America/Los_Angeles');
-new Job('*/20 * * * * *', getJob('calculateFriendValue'), null, true, 'America/Los_Angeles');
-new Job('*/10 * * * * *', getJob('matchOrder'), null, true, 'America/Los_Angeles');
-
-// config ----------------------------------------------------------------------------------------------------
-global.gskse = {
-	start_fund: 10000,
-
-	avatar_width: 128,
-	avatar_height: 128,
-
-	corp_legal_fees: 300,
-	
-	corp_tax_rate: 0.2,
-	corp_ceo_cut: 0.05,
-	corp_revenue_cut: 0.5,
-	corp_dividen_cut: 0.25,  // 1 - corp_tax_rate - corp_ceo_cut - corp_revenue_cut
-
-	salary_tax_rate: 0.2,
-
-	po_revenue_threshold: 100000000,
-	po_lock_up_days: 3,
-	po_fees: 5000000,
-	po_cut: 0.08,
-
-	funs: {
-		corp_revenue: (g, c) => g * c ** 2 * 3000,
-		corp_revenue_break: r => {
-			var tax = Math.round(r * gskse.corp_tax_rate);
-			var ceo = Math.round(r * gskse.corp_ceo_cut);
-			var revenue = Math.round(r * gskse.corp_revenue_cut);
-			var dividen = r - tax - ceo - revenue;
-			return { tax: tax, ceo: ceo, revenue: revenue, dividen: dividen };
-		},
-
-		salary: s => Math.round(s * (1 - gskse.salary_tax_rate)),
-
-		po_lock_up: () => {
-			var lock_up = new Date(Date.now());
-			lock_up.setDate(lock_up.getDate() + gskse.po_lock_up_days);
-			return lock_up;
-		},
-		po_fund: f => Math.round(f * (1 - gskse.po_cut)),
-	}
-};
-debug(gskse.funs.salary(3000));
-debug(gskse.funs.po_lock_up());
+new Job('*/10 * * * * *', getJob('calculateCorpProfit'), null, true, 'America/Los_Angeles');
+// new Job('*/20 * * * * *', getJob('calculateFriendValue'), null, true, 'America/Los_Angeles');
+// new Job('* * * * * *', getJob('matchOrder'), null, true, 'America/Los_Angeles');
 
 module.exports = app;

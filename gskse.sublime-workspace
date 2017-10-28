@@ -4,6 +4,46 @@
 		"selected_items":
 		[
 			[
+				"se",
+				"setDate"
+			],
+			[
+				"is_fll",
+				"is_filling"
+			],
+			[
+				"res",
+				"results"
+			],
+			[
+				"lo",
+				"lock_up"
+			],
+			[
+				"ipolo",
+				"ipo_lock_up_days"
+			],
+			[
+				"tax",
+				"corp_tax_rate"
+			],
+			[
+				"for",
+				"for\tfor (…) {…}"
+			],
+			[
+				"text",
+				"textarea"
+			],
+			[
+				"friend",
+				"friendController"
+			],
+			[
+				"sr",
+				"stringRequiredUniqueMatch"
+			],
+			[
 				"sin_",
 				"sin_table_min"
 			],
@@ -27,14 +67,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "app.js",
-			"settings":
-			{
-				"buffer_size": 1495,
-				"line_ending": "Unix"
-			}
-		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -68,10 +100,79 @@
 	},
 	"expanded_folders":
 	[
-		"/Volumes/SDXC/Git/gskse"
+		"/D/Node/gskse",
+		"/D/Node/gskse/jobs",
+		"/D/Node/gskse/models",
+		"/D/Node/gskse/routes",
+		"/D/Node/gskse/routes/corps",
+		"/D/Node/gskse/routes/friends",
+		"/D/Node/gskse/routes/locales",
+		"/D/Node/gskse/routes/news",
+		"/D/Node/gskse/views",
+		"/D/Node/gskse/views/corps",
+		"/D/Node/gskse/views/corps/symbol",
+		"/D/Node/gskse/views/news"
 	],
 	"file_history":
 	[
+		"/D/Node/gskse/models/order.js",
+		"/D/Node/gskse/views/corps/symbol/trade.pug",
+		"/D/Node/gskse/routes/corps/symbol.js",
+		"/D/Node/gskse/config.js",
+		"/D/Node/gskse/views/corps/symbol/offer.pug",
+		"/D/Node/gskse/models/stock.js",
+		"/D/Node/gskse/views/corps/symbol/invest.pug",
+		"/D/Node/gskse/views/corps/symbol/base.pug",
+		"/D/Node/gskse/routes/corps/root.js",
+		"/D/Node/gskse/app.js",
+		"/D/Node/gskse/views/corps/symbol/index.pug",
+		"/D/Node/gskse/routes/friends/root.js",
+		"/D/Node/gskse/views/error.pug",
+		"/D/Node/gskse/views/corps/symbol/profile.pug",
+		"/D/Node/gskse/jobs/matchOrder.js",
+		"/D/Node/gskse/README.md",
+		"/D/Node/gskse/models/helper.js",
+		"/D/Node/gskse/models/corp.js",
+		"/D/Node/gskse/models/friend.js",
+		"/D/Node/gskse/models/news.js",
+		"/D/Node/gskse/models/report.js",
+		"/D/Node/gskse/models/tick.js",
+		"/D/Node/gskse/views/base.pug",
+		"/D/Node/gskse/jobs/calculateCorpProfit.js",
+		"/D/Node/gskse/views/corps/symbol/financials.pug",
+		"/D/Node/gskse/views/corps/symbol/holders.pug",
+		"/D/Node/gskse/routes/root.js",
+		"/D/Node/gskse/views/news/id.pug",
+		"/D/Node/gskse/routes/news/root.js",
+		"/D/Node/gskse/views/news/post.pug",
+		"/D/Node/gskse/controllers/newsController.js",
+		"/D/Node/gskse/views/news_detail.pug",
+		"/D/Node/gskse/views/navbar.pug",
+		"/D/Node/gskse/views/venture_detail.pug",
+		"/D/Node/gskse/controllers/ventureController.js",
+		"/D/Node/gskse/views/news_new.pug",
+		"/D/Node/gskse/routes/router.js",
+		"/D/Node/gskse/views/signup.pug",
+		"/D/Node/gskse/public/css/style.css",
+		"/D/Node/gskse/views/venture_new.pug",
+		"/D/Node/gskse/models/company.js",
+		"/D/Node/gskse/controllers/companyController.js",
+		"/D/Node/gskse/views/company_new.pug",
+		"/D/Node/gskse/public/css/mod.css",
+		"/D/Node/gskse/views/login.pug",
+		"/D/Node/thlive/controllers/api/imageApi.js",
+		"/D/Node/thlive/app.js",
+		"/D/Node/gskse/controllers/friendController.js",
+		"/D/Node/thlive/views/images/upload.pug",
+		"/D/Node/gskse/views/index.pug",
+		"/D/Node/gskse/public/js/vendor/echarts.js",
+		"/D/Node/gskse/routes/exchange.js",
+		"/D/Node/gskse/views/exchange/trade.pug",
+		"/D/Node/gskse/views/exchange/quote.pug",
+		"/D/Node/thlive/controllers/imageController.js",
+		"/C/Users/Kailang/Desktop/New Text Document (5).txt",
+		"/D/Node/gskse/views/exchange/markets.pug",
+		"/D/Node/gskse/views/exchange/base.pug",
 		"/Users/kailang/Downloads/famitracker/Source/SoundGen.cpp",
 		"/Users/kailang/Downloads/famitracker/Source/SoundGen.h",
 		"/Users/kailang/Downloads/famitracker/Source/APU/APU.CPP",
@@ -90,20 +191,149 @@
 	],
 	"find":
 	{
-		"height": 22.0
+		"height": 48.0
 	},
 	"find_in_files":
 	{
-		"height": 101.0,
+		"height": 131.0,
 		"where_history":
 		[
+			""
 		]
 	},
 	"find_state":
 	{
-		"case_sensitive": false,
+		"case_sensitive": true,
 		"find_history":
 		[
+			"ask",
+			"asks",
+			"deal order",
+			"deal order unfilled",
+			"$",
+			"quantity",
+			"order.quantity",
+			"res.locals.",
+			"res.body",
+			"o",
+			"1",
+			"date",
+			"expiration",
+			"strIntFull",
+			"req.body.amount",
+			"req.body.quantity",
+			"amount",
+			"req.body.quantity",
+			"quantity",
+			"req.body.quantity",
+			"amount",
+			"corpFees",
+			"corp_fees",
+			"f",
+			"res.locals.",
+			"context",
+			"10000",
+			"context",
+			"status",
+			"name",
+			"message",
+			"{",
+			"message",
+			"{",
+			":",
+			"\"",
+			":",
+			"getOrderExpired",
+			"market",
+			"uuid",
+			"''",
+			"funs",
+			"lock_up",
+			"po",
+			"corp_revenue_cut",
+			"corp_ceo_cut",
+			"corp_tax_rate",
+			"Name",
+			"faker",
+			"firstName",
+			"helper.natural",
+			"helper.number",
+			"order",
+			"marketOrders",
+			"req.body",
+			"gte",
+			", expired: false",
+			"false",
+			"is_expired",
+			"mark as ",
+			"sell",
+			"market",
+			"bug",
+			"market",
+			"body",
+			"row",
+			"div.col-sm-8",
+			".col-sm-4.col-form-labe",
+			"Full",
+			"corp",
+			"res.locals.",
+			"amount",
+			"new corp",
+			"corp.create",
+			"cash",
+			"trade",
+			"invest",
+			"ipo",
+			"now",
+			"params",
+			"query",
+			"..",
+			"CronJob",
+			"p",
+			"corp",
+			"hostname",
+			"    ",
+			"arrLen",
+			"splitArr",
+			"    ",
+			"avatar",
+			"corp",
+			"desc",
+			"name",
+			"avatar",
+			"venture",
+			"avatar",
+			"Corp",
+			"new_post",
+			"locale",
+			"l",
+			"locale",
+			"friend",
+			"Limit",
+			"REIM",
+			"company",
+			"Company",
+			"company",
+			"companies",
+			"login",
+			"friend",
+			"i",
+			"signout",
+			"signup",
+			".py-2.py-md-0.mr-md-2",
+			"text",
+			"avatar",
+			"image",
+			"\"",
+			"type",
+			"avatar",
+			"'",
+			"login",
+			"User",
+			"user",
+			"login",
+			"res",
+			"email"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -111,6 +341,11 @@
 		"regex": true,
 		"replace_history":
 		[
+			"helper.unsigned",
+			"helper.natural",
+			"\\t",
+			"",
+			"`$1`"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -121,49 +356,18 @@
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "app.js",
-					"semi_transient": true,
-					"settings":
-					{
-						"buffer_size": 1495,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								789,
-								789
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				}
 			]
 		}
 	],
 	"incremental_find":
 	{
-		"height": 21.0
+		"height": 35.0
 	},
 	"input":
 	{
-		"height": 35.0
+		"height": 49.0
 	},
 	"layout":
 	{
@@ -196,7 +400,7 @@
 	"project": "gskse.sublime-project",
 	"replace":
 	{
-		"height": 40.0
+		"height": 88.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -234,7 +438,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 213.0,
+	"side_bar_width": 248.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

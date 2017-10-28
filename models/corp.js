@@ -11,13 +11,14 @@ var CorpSchema = new Schema({
 	symbol: 	helper.stringMatch(/^[A-Z]{1,4}$/),
 	locale: 	helper.stringEnum(helper.localeOption),
 
-	cash: 		helper.number(),
-	revenue: 	helper.number(),
+	cash: 		helper.unsigned(),
+	revenue: 	helper.unsigned(),
 
-	stock: 		helper.number(),
-	offer: 		helper.number(),
-	price: 		helper.number(),
+	stock: 		helper.unsigned(),
+	offer: 		helper.unsigned(),
+	price: 		helper.unsigned(),
 
+	life: 		helper.ref('Friend'),
 	ceo: 		helper.ref('Friend'),
 	founder: 	helper.ref('Friend'),
 

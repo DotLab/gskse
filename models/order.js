@@ -7,20 +7,20 @@ var OrderSchema = new Schema({
 	friend: 	helper.ref('Friend'),
 	corp: 		helper.ref('Corp'),
 
-	quantity: 	helper.number(),
+	quantity: 	helper.unsigned(),
+	unfilled: 	helper.unsigned(),
 
 	action: 	helper.stringEnum(helper.orderAction),
 	type: 		helper.stringEnum(helper.orderType),
+	duration: 	helper.stringEnum(helper.orderDuration),
+
+	price: 		helper.unsigned(),
 
 	placed: 	helper.date(),
-	expired: 	helper.date(),
 	filled: 	helper.date(),
+	expired: 	helper.date(),
 
-	price: 		helper.number(),
-	deal: 		helper.number(),
-
-	is_expired: 	helper.boolean(),
-	is_filled: 		helper.boolean(),
+	is_aborted: 	helper.boolean(),
 });
 
 module.exports = mongoose.model('Order', OrderSchema);

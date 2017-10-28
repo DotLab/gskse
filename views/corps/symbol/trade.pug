@@ -19,7 +19,7 @@ block content
 
 				div.form-group
 					label Quantity
-					input.form-control(required, type='text', name='quantity')
+					input.form-control(required, type='number', name='quantity')
 
 				div.form-group
 					label Transaction
@@ -30,23 +30,23 @@ block content
 								option(value='sell') Sell
 						div.col-sm-6.pl-0
 							select(name='type').custom-select.form-control
-								option(value='market') Market
 								option(value='limit') Limit
+								//- option(value='market') Market
 
 				div.form-group
 					label Price
 					div.input-group
 						span.input-group-addon $
-						input.form-control(type='text', name='price')
+						input.form-control(type='number', name='price')
 
 				div.form-group
 					label Duration
 					select(name='duration').custom-select.form-control
 							option(value='day') Day
 							option(value='gtc') Good Til Canceled
-							//- option Immediate Or Cancel
-							//- option Fill Or Kill
-							//- option All Or None
+							//- option(value='ioc') Immediate Or Cancel
+							//- option(value='fok') Fill Or Kill
+							//- option(value='aon') All Or None
 							option(value='1m') One Minute
 							option(value='3m') Three Minutes
 							option(value='5m') Five Minutes

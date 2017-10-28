@@ -34,7 +34,7 @@ block content
 			thead
 				tr
 					th.small Individual or Entity
-					th.text-right.small Most Recent Transaction Date
+					//- th.text-right.small Most Recent Transaction Date
 					th.text-right.small Shares Owned as of Transaction Date
 			tbody
 				- stocks.sort((a, b) => a.quantity < b.quantity)
@@ -49,7 +49,7 @@ block content
 									span CEO
 								else
 									span Shareholder
-						td.text-right.align-middle= strDateTime(stock.updated)
+						// td.text-right.align-middle= strDateTime(stock.updated)
 						td.text-right.align-middle= strInt(stock.quantity)
 
 block foot2

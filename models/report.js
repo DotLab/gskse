@@ -7,10 +7,10 @@ var ReportSchema = new Schema({
 	corp: 		helper.ref(),
 	date: 		helper.date(),
 
-	revenue: 	helper.number(),
-	tax: 		helper.number(), 
-	expense: 	helper.number(),
-	earning: 	helper.number(),
+	revenue: 	helper.unsigned(),
+	tax: 		helper.unsigned(), 
+	expense: 	helper.unsigned(),
+	earning: 	helper.unsigned(),
 });
 
 ReportSchema.index({ corp: 1, date: 1 }, { unique: true });

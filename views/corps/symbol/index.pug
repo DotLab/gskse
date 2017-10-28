@@ -42,7 +42,7 @@ block content
 					a(href=url_news_id(news.id))
 						img.mr-3.rounded.d-none.d-md-block(src=getSrc(news.hero), height='100px')
 					div.media-body
-						p.small.text-muted.mb-1 #{getHost(news.source)} &bull; #{news.posted}
+						p.small.text-muted.mb-1 News &bull; #[a(href=news.source)= getHost(news.source)] &bull; #{strDate(news.posted)}
 						h5.mb-1
 							a.text-dark(href=url_news_id(news.id))= news.title
 						p.small= getSummary(news.content)

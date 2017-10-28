@@ -6,13 +6,13 @@ var helper = require('./helper');
 var TickSchema = new Schema({
 	corp: 		helper.ref('Corp'),
 
+	buyer: 		helper.ref('Friend'),
+	seller: 	helper.ref('Friend'),
+
+	price: 		helper.unsigned(),
+	quantity: 	helper.unsigned(),
+
 	date: 		helper.date(),
-
-	ask: 		helper.number(),
-	bid: 		helper.number(),
-
-	ask_vol:	helper.number(),
-	bid_vol:	helper.number(),
 });
 
 module.exports = mongoose.model('Tick', TickSchema);

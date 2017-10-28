@@ -10,8 +10,10 @@ var FriendSchema = new Schema({
 	salt: 		helper.string(),
 	hash: 		helper.string(),
 
-	cash: 		helper.number(),
-	value: 		helper.number(),  //= cash + <value of stocks owned>
+	cash: 		helper.unsigned(),
+	pledge: 	helper.unsigned(),
+	
+	value: 		helper.unsigned(),  //= cash + pledge + <value of stocks owned>
 
 	joined: 	helper.date(),
 });

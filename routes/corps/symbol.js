@@ -7,8 +7,11 @@ var News = getModel('news');
 var Order = getModel('order');
 var Stock = getModel('stock');
 
+var corpController = getController('corpController');
+var friendController = getController('friendController');
+
 router.get('/', function(req, res, next) {
-	News.find({ corp: res.locals.corp._id }).then(newses => {
+	corpController.findNewses(res.locals.corp).then(newses => {
 		res.locals.newses = newses;
 		res.render('corps/symbol/index');
 	})
@@ -23,15 +26,17 @@ router.get('/profile', function(req, res, next) {
 });
 
 router.get('/holders', function(req, res, next) {
-	if (!res.locals.corp.is_public && !res.locals.is_holder) throw new Error(403);
+	if (!res.locals.corp.is_public && !res.locals.is_holder) throw gskse.status.forbidden;
 
-	Stock.find({ corp: res.locals.corp._id, quantity: { $gte: 0 } }).populate('friend').then(stocks => {
+	corpController.findHolderStocks(res.locals.corp).then(stocks => {
 		res.locals.stocks = stocks;
 		res.render('corps/symbol/holders');
 	}).catch(err => next(err));
 });
 
 router.get('/financials', function(req, res, next) {
+	if (!res.locals.corp.is_public && !res.locals.is_holder) throw gskse.status.forbidden;
+
 	res.render('corps/symbol/financials');
 });
 
@@ -44,27 +49,15 @@ router.get('/trade', function(req, res, next) {
 });
 
 router.post('/trade', function(req, res, next) {
-	Order.create({
-		friend: res.locals.friend._id,
-		corp: res.locals.corp._id,
+	req.body.quantity = parseInt(req.body.quantity);
+	req.body.price = parseFloat(req.body.price);
+	req.body.action = String(req.body.action);
+	req.body.type = String(req.body.type);
+	req.body.duration = String(req.body.duration);
 
-		quantity: req.body.quantity,
-
-		action: req.body.action,
-		type: req.body.type,
-
-		placed: Date.now(),
-		expired: new Date(0),
-		filled: new Date(0),
-
-		price: req.body.type == 'market' ? 0 : req.body.price,
-		deal: 0,
-
-		is_expired: false,
-		is_filled: false,
-	}).then(order => {
-		res.send(order);
-	}).catch(err => next(err));
+	corpController.trade(res.locals.friend, res.locals.corp, req.body.quantity, req.body.price, req.body.action, req.body.type, req.body.duration).then(order => {
+		res.redirect(url_corps_symbol_trade(res.locals.corp.id));
+	});
 });
 
 router.get('/invest', function(req, res, next) {
@@ -72,72 +65,14 @@ router.get('/invest', function(req, res, next) {
 });
 
 router.post('/invest', function(req, res, next) {
-	debug(parseInt(req.body.amount));
-	var amount = Math.round(Math.abs(parseInt(req.body.amount)));
-	amount = amount ? amount : 100;
+	req.body.quantity = parseInt(req.body.quantity);
 
-	if (amount > res.locals.friend.cash) throw new Error('Too poor');
-	res.locals.friend.cash -= amount;
-	res.locals.friend.save();
+	if (res.locals.corp.is_public) throw gskse.status.bad_request;
+	if (req.body.quantity > res.locals.friend.cash) throw gskse.status.too_poor;
 
-	debug({ friend: res.locals.friend._id, corp: res.locals.corp._id });
-	
-	Order.create({
-		friend: res.locals.friend._id,
-		corp: res.locals.corp._id,
-
-		quantity: amount,
-
-		action: 'buy',
-		type: 'private',
-
-		placed: Date.now(),
-		expired: new Date(0),
-		filled: Date.now(),
-
-		price: res.locals.corp.price,
-		deal: res.locals.corp.price,
-
-		is_expired: false,
-		is_filled: true,
-	}).then(order => {
-		debug(order);
-		return Stock.findOne({ friend: res.locals.friend._id, corp: res.locals.corp._id });
+	friendController.pay(res.locals.friend, req.body.quantity).then(friend => {
+		return corpController.invest(res.locals.friend, res.locals.corp, req.body.quantity);
 	}).then(stock => {
-		if (!stock) {
-			return Stock.create({ 
-				friend: res.locals.friend._id,
-				corp: res.locals.corp._id,
-
-				quantity: 0,
-
-				spent: 0,
-				value: 0,
-				price: 0,
-
-				updated: new Date(0),
-
-				lock_up: new Date(0),
-				
-				is_locked: false,
-			});
-		}
-
-		return stock; 
-	}).then(stock => {
-		res.locals.corp.stock += amount;
-		res.locals.corp.save();
-
-		stock.quantity += amount;
-
-		stock.spent += amount;
-		stock.value = stock.quantity * res.locals.corp.price;
-		stock.price = stock.spent / stock.quantity;
-		stock.updated = Date.now();
-		
-		return stock.save();
-	}).then(stock => {
-		debug(stock);
 		res.redirect(url_corps_symbol_holders(res.locals.corp.symbol));
 	}).catch(err => next(err));
 });
@@ -147,26 +82,12 @@ router.get('/offer', function(req, res, next) {
 });
 
 router.post('/offer', function(req, res, next) {
-	var corp = res.locals.corp;
-	var friend = res.locals.friend;
+	req.body.price = parseFloat(req.body.price);
+	req.body.quantity = parseInt(req.body.quantity);
 
-	if (!corp.is_public) {  // ipo
-		corp.is_public = true;
-		corp.ipo = Date.now();
-	}
-
-	corp.price = req.body.price;
-	corp.offer = req.body.quantity;
-	corp.is_offering = true;
-	corp.save();
-
-	Stock.findOne({ friend: friend._id, corp: corp._id }).then(stock => {
-		if (!stock) return;
-
-		stock.lock_up = gskse.funs.lock_up();
-		stock.is_locked = true;
-		stock.save();
-	})
+	corpController.offer(res.locals.friend, res.locals.corp, req.body.quantity, req.body.price).then(stock => {
+		res.redirect(url_corps_symbol_holders(res.locals.corp.symbol));
+	}).catch(err => next(err));
 });
 
 module.exports = router;

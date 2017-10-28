@@ -14,7 +14,7 @@ var NewsSchema = new Schema({
 
 	posted: 	helper.date(),
 
-	click: 		helper.number(),
+	click: 		helper.unsigned(),
 });
 
 module.exports = mongoose.model('News', NewsSchema);
