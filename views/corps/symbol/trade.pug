@@ -5,6 +5,39 @@ block var2
 	- nav = 'trade'
 
 block content
+	div
+		table.table.table-sm.table-dark
+			thead
+				tr
+					th.text-center.small Friend
+					th.text-center.small Type
+					th.text-center.small Bid Size
+					th.text-center.small Price
+					th.text-center.small Ask Size
+					th.text-center.small Fill
+					th.text-center.small Estimate
+			tbody
+				for order in asks
+					tr
+						td.small.text-center= order.friend.name
+						td.small.text-center= order.type
+						td.bg-cyan.small
+						td.small.text-right= order.type == 'market' ? '--' : strSunshine(order.price)
+						td.bg-red.small.text-center= strInt(order.unfilled) + ' / ' + strInt(order.quantity)
+						td.small.p-0
+							div.bg-green(style=`height: 29px; width: ${100.0 * (1 - (order.unfilled / order.quantity))}%`)
+						td.small.text-right= strSunshine(order.price * order.unfilled)
+				for order in bids
+					tr
+						td.small.text-center= friend.name
+						td.small.text-center= order.type
+						td.bg-blue.small.text-center= strInt(order.unfilled) + ' / ' + strInt(order.quantity)
+						td.small.text-right= order.type == 'market' ? '--' : strSunshine(order.price)
+						td.bg-pink.small
+						td.small.p-0
+							div.bg-green(style=`height: 29px; width: ${100.0 * (1 - (order.unfilled / order.quantity))}%`)
+						td.small.text-right= strSunshine(order.price * order.unfilled)
+
 	div.row
 		div.col-md-6
 			form(method='post')
@@ -31,7 +64,7 @@ block content
 						div.col-sm-6.pl-0
 							select(name='type').custom-select.form-control
 								option(value='limit') Limit
-								//- option(value='market') Market
+								option(value='market') Market
 
 				div.form-group
 					label Price
@@ -43,10 +76,8 @@ block content
 					label Duration
 					select(name='duration').custom-select.form-control
 							option(value='day') Day
-							option(value='gtc') Good Til Canceled
-							//- option(value='ioc') Immediate Or Cancel
-							//- option(value='fok') Fill Or Kill
-							//- option(value='aon') All Or None
+							option(value='gtc') Good Till Canceled
+							option(value='ioc') Immediate Or Cancel
 							option(value='1m') One Minute
 							option(value='3m') Three Minutes
 							option(value='5m') Five Minutes
@@ -84,3 +115,4 @@ block content
 
 			//- 			dd.col-sm-6 Cash
 			//- 			dt.col-sm-6.text-right= strSunshine(friend.cash)
+

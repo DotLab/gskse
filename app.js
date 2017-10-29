@@ -1,24 +1,7 @@
-'use strict';
-
 var debug = require('debug')('gskse:app');
-
-// env ----------------------------------------------------------------------------------------------------
-var path = require('path');
-global.appRoot = path.resolve(__dirname);
-global.getPath = function() {
-	return Array.prototype.reduce.call(arguments, (a, b) => path.join(a, b), appRoot);
-};
-global.getUploadPath = (file => getPath('public', 'upload', file));
-global.getModel = (model => require(getPath('models', model)));
-global.getController = (model => require(getPath('controllers', model)));
-global.getJob = (job => require(getPath('jobs', job)));
-debug('appRoot [%s]', appRoot);
-debug('getPath [%s]', getPath('routes', 'root'));
 
 // config ----------------------------------------------------------------------------------------------------
 global.gskse = require('./config');
-debug(gskse.getSalary(3000));
-debug(gskse.getOfferLockUp());
 
 // mongoose ----------------------------------------------------------------------------------------------------
 var mongoose = require('mongoose');
@@ -33,7 +16,7 @@ mongoose.connect('mongodb://localhost:27017/gskse', {
 // express ----------------------------------------------------------------------------------------------------
 var express = require('express');
 var app = express();
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', gskse.getPath('views'));
 app.set('view engine', 'pug');
 
 // morgan ----------------------------------------------------------------------------------------------------
@@ -41,7 +24,7 @@ app.set('view engine', 'pug');
 // app.use(morgan('dev')); // log requests
 
 // static ----------------------------------------------------------------------------------------------------
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(gskse.getPath('public')));
 
 // bodyParser ----------------------------------------------------------------------------------------------------
 var bodyParser = require('body-parser');
@@ -80,7 +63,7 @@ i18n.configure({
 app.use(i18n.init);
 
 // helpers ----------------------------------------------------------------------------------------------------
-var Friend = getModel('friend');
+var Friend = gskse.getModel('friend');
 app.use(function(req, res, next) {
 	var locale = req.session.locale;
 	if (locale) i18n.setLocale(res, locale);
@@ -99,7 +82,7 @@ app.use(function(req, res, next) {
 });
 
 // routes ----------------------------------------------------------------------------------------------------
-app.use('/', require(getPath('routes', 'root')));
+app.use('/', require(gskse.getPath('routes', 'root')));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -119,8 +102,8 @@ app.use(function(err, req, res, next) {
 
 // cron ----------------------------------------------------------------------------------------------------
 var Job = require('cron').CronJob;
-new Job('*/10 * * * * *', getJob('calculateCorpProfit'), null, true, 'America/Los_Angeles');
-// new Job('*/20 * * * * *', getJob('calculateFriendValue'), null, true, 'America/Los_Angeles');
-// new Job('* * * * * *', getJob('matchOrder'), null, true, 'America/Los_Angeles');
+new Job('0 * * * * *', gskse.getJob('calculateCorpProfit'), null, true, 'America/Los_Angeles');
+// new Job('*/20 * * * * *', gskse.getJob('calculateFriendValue'), null, true, 'America/Los_Angeles');
+// new Job('* * * * * *', gskse.getJob('matchOrder'), null, true, 'America/Los_Angeles');
 
 module.exports = app;

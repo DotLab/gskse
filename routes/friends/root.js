@@ -1,7 +1,7 @@
 var debug = require('debug')('gskse:friends');
 var router = require('express').Router();
 
-var friendController = getController('friendController');
+var friendController = gskse.getController('friendController');
 
 router.get('/login', function(req, res, next) {
 	res.render('friends/login');

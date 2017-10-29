@@ -1,9 +1,9 @@
 var debug = require('debug')('gskse:news');
 var router = require('express').Router();
 
-var Friend = getModel('friend');
-var Corp = getModel('corp');
-var News = getModel('news');
+var Friend = gskse.getModel('friend');
+var Corp = gskse.getModel('corp');
+var News = gskse.getModel('news');
 
 var sharp = require('sharp');
 var Rusha = require('rusha');
@@ -26,7 +26,7 @@ router.post('/post', function(req, res, next) {
 		});
 	}).then(sha1 => {
 		context.hero = sha1 + '.jpeg';
-		return sharp(req.files.hero.data).resize(256, 144).jpeg().toFile(getUploadPath(context.hero));
+		return sharp(req.files.hero.data).resize(gskse.heroWidth, gskse.heroHeight).jpeg().toFile(gskse.getUploadPath(context.hero));
 	}).then(info => {
 		return new News({
 			friend: res.locals.friend.id,

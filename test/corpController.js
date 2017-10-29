@@ -1,17 +1,17 @@
 var debug = require('debug')('gskse:test:corpController');
+var gskse = require('../config');
+
 var should = require('should');
 var sharp = require('sharp');
 
-var gskse = require('../config');
+var friendController = gskse.getController('friendController');
+var corpController = gskse.getController('corpController');
 
-var friendController = require('../controllers/friendController');
-var corpController = require('../controllers/corpController');
-
-var Friend = require('../models/friend');
-var Corp = require('../models/corp');
-var Order = require('../models/order');
-var Tick = require('../models/tick');
-var Stock = require('../models/stock');
+var Friend = gskse.getModel('friend');
+var Corp = gskse.getModel('corp');
+var Order = gskse.getModel('order');
+var Tick = gskse.getModel('tick');
+var Stock = gskse.getModel('stock');
 
 describe('corpController', function() {
 	var self = this;
@@ -39,16 +39,16 @@ describe('corpController', function() {
 			}).then(friend => {
 				should.exist(friend);
 				self.friend = friend;
-				return friendController.signup('Kailang1', '123', self.avatarData);
+				return friendController.signup('Kailang_1', '123', self.avatarData);
 			}).then(friend => {
 				should.exist(friend);
 				self.friend1 = friend;
-				return corpController.register(self.friend, 'C.C.', 'Desc', 'CC', 'en', self.avatarData);
+				return corpController.register(self.friend, 'C.C.', 'Description', 'CC', 'en', self.avatarData);
 			}).then(corp => {
 				self.corp = corp;
 				should.exist(corp);
 				corp.name.should.be.exactly('C.C.');
-				corp.desc.should.be.exactly('Desc');
+				corp.desc.should.be.exactly('Description');
 				corp.symbol.should.be.exactly('CC');
 				corp.locale.should.be.exactly('en');
 				should.exist(corp.ceo);
@@ -116,13 +116,13 @@ describe('corpController', function() {
 	});
 
 	describe('::offer', function() {
-		it('ceo can offer', function(done) {
+		it('allow ceo to offer', function(done) {
 			corpController.offer(self.friend, self.corp, 100, 10).then(stock => {
 				should.exist(stock);
 				done();
 			}).catch(err => done(err));
 		});
-		it('others cannot offer', function(done) {
+		it('forbid others from offering', function(done) {
 			corpController.offer(self.friend1, self.corp, 100, 10).then(stock => {
 				done(stock);
 			}).catch(err => {
@@ -132,8 +132,122 @@ describe('corpController', function() {
 		});
 	});
 
+	describe('::findOrders', function() {
+		beforeEach('clear orders', function(done) {
+			Order.remove({}).then(() => done());
+		});
+
+		it('different limit orders', function(done) {
+			Promise.all([
+				corpController.trade(self.friend, self.corp, 25, 19, 'sell', 'limit', 'day'),
+				corpController.trade(self.friend, self.corp, 50, 18, 'sell', 'limit', 'gtc'),
+				corpController.trade(self.friend, self.corp, 70, 17, 'sell', 'limit', '1m'),
+				corpController.trade(self.friend, self.corp, 60, 16, 'sell', 'limit', '3m'),
+				corpController.trade(self.friend, self.corp, 80, 15, 'sell', 'limit', '5m'),
+
+				corpController.trade(self.friend1, self.corp, 2, 9, 'buy', 'limit', 'day'),
+				corpController.trade(self.friend1, self.corp, 5, 8, 'buy', 'limit', 'gtc'),
+				corpController.trade(self.friend1, self.corp, 7, 7, 'buy', 'limit', '1m'),
+				corpController.trade(self.friend1, self.corp, 6, 6, 'buy', 'limit', '3m'),
+				corpController.trade(self.friend1, self.corp, 8, 5, 'buy', 'limit', '5m'),
+			]).then(results => {
+				return corpController.findOrders(self.corp);
+			}).then(orders => {
+				orders.asks.should.have.length(5);
+				orders.asks.map(a => a.quantity).should.deepEqual([ 25, 50, 70, 60, 80 ]);
+				orders.asks.map(a => a.price).should.deepEqual([ 19, 18, 17, 16, 15 ]);
+
+				orders.bids.should.have.length(5);
+				orders.bids.map(a => a.quantity).should.deepEqual([ 2, 5, 7, 6, 8 ]);
+				orders.bids.map(a => a.price).should.deepEqual([ 9, 8, 7, 6, 5 ]);
+				done();
+			}).catch(err => done(err));
+		});
+
+		it('same limit different time orders', function(done) {  // chain thens together to ensure the different placed time
+			corpController.trade(self.friend, self.corp, 10, 10, 'sell', 'limit', 'day').then(ignored => {
+				return corpController.trade(self.friend, self.corp, 10, 10, 'sell', 'limit', 'gtc');
+			}).then(ignored => {
+				return corpController.trade(self.friend1, self.corp, 10, 9, 'buy', 'limit', '3m');
+			}).then(ignored => {
+				return corpController.trade(self.friend1, self.corp, 10, 9, 'buy', 'limit', '5m');
+			}).then(results => {
+				return corpController.findOrders(self.corp);
+			}).then(orders => {
+				orders.asks.should.have.length(2);
+				orders.asks.map(a => a.duration).should.deepEqual([ 'gtc', 'day' ]);
+
+				orders.bids.should.have.length(2);
+				orders.bids.map(a => a.duration).should.deepEqual([ '3m', '5m' ]);
+				done();
+			}).catch(err => done(err));
+		});
+
+		it('same sell market different time orders', function(done) {  // chain thens together to ensure the different placed time
+			corpController.trade(self.friend, self.corp, 10, 0, 'sell', 'market', 'day').then(ignored => {
+				return corpController.trade(self.friend, self.corp, 10, 0, 'sell', 'market', 'gtc');
+			}).then(ignored => {
+				return corpController.trade(self.friend1, self.corp, 10, 0, 'sell', 'market', '3m');
+			}).then(ignored => {
+				return corpController.trade(self.friend1, self.corp, 10, 0, 'sell', 'market', '5m');
+			}).then(results => {
+				return corpController.findOrders(self.corp);
+			}).then(orders => {
+				orders.asks.should.have.length(4);
+				orders.asks.map(a => a.duration).should.deepEqual([ '5m', '3m', 'gtc', 'day' ]);
+				done();
+			}).catch(err => done(err));
+		});
+
+		it('same buy market different time orders', function(done) {  // chain thens together to ensure the different placed time
+			corpController.trade(self.friend, self.corp, 10, 0, 'buy', 'market', 'day').then(ignored => {
+				return corpController.trade(self.friend, self.corp, 10, 0, 'buy', 'market', 'gtc');
+			}).then(ignored => {
+				return corpController.trade(self.friend1, self.corp, 10, 0, 'buy', 'market', '3m');
+			}).then(ignored => {
+				return corpController.trade(self.friend1, self.corp, 10, 0, 'buy', 'market', '5m');
+			}).then(results => {
+				return corpController.findOrders(self.corp);
+			}).then(orders => {
+				orders.bids.should.have.length(4);
+				orders.bids.map(a => a.duration).should.deepEqual([ 'day', 'gtc', '3m', '5m' ]);
+				done();
+			}).catch(err => done(err));
+		});
+
+		it('limit market sell orders', function(done) {
+			Promise.all([
+				corpController.trade(self.friend, self.corp, 25, 20, 'sell', 'limit', 'day'),
+				corpController.trade(self.friend, self.corp, 30, 10, 'sell', 'limit', 'gtc'),
+				corpController.trade(self.friend, self.corp, 40, 0, 'sell', 'market', '1m'),
+			]).then(results => {
+				return corpController.findOrders(self.corp);
+			}).then(orders => {
+				orders.asks.should.have.length(3);
+				orders.asks.map(a => a.quantity).should.deepEqual([ 25, 30, 40 ]);
+				orders.asks.map(a => a.duration).should.deepEqual([ 'day', 'gtc', '1m' ]);
+				done();
+			}).catch(err => done(err));
+		});
+
+		it('limit market buy orders', function(done) {
+			Promise.all([
+				corpController.trade(self.friend, self.corp, 40, 0, 'buy', 'market', '1m'),
+				corpController.trade(self.friend, self.corp, 25, 20, 'buy', 'limit', 'day'),
+				corpController.trade(self.friend, self.corp, 30, 10, 'buy', 'limit', 'gtc'),
+			]).then(results => {
+				return corpController.findOrders(self.corp);
+			}).then(orders => {
+				orders.bids.should.have.length(3);
+				orders.bids.map(a => a.quantity).should.deepEqual([ 40, 25, 30 ]);
+				orders.bids.map(a => a.duration).should.deepEqual([ '1m', 'day', 'gtc' ]);
+				done();
+			}).catch(err => done(err));
+		});
+	});
+
 	describe('::trade', function() {
-		afterEach('clear orders', function(done) {
+		beforeEach('clear orders', function(done) {
 			Order.remove({}).then(() => done());
 		});
 

@@ -1,12 +1,12 @@
 var debug = require('debug')('gskse:test:friendController');
+var gskse = require('../config');
+
 var should = require('should');
 var sharp = require('sharp');
 
-var gskse = require('../config');
+var friendController = gskse.getController('friendController');
 
-var friendController = require('../controllers/friendController');
-
-var Friend = require('../models/friend');
+var Friend = gskse.getModel('friend');
 
 describe('friendController', function() {
 	before('clear database', function(done) {

@@ -1,12 +1,12 @@
 var debug = require('debug')('gskse:jobs:calcProf');
 
-var Friend = getModel('friend');
-var Corp = getModel('corp');
-var News = getModel('news');
-var Report = getModel('report');
-var Stock = getModel('stock');
+var Friend = gskse.getModel('friend');
+var Corp = gskse.getModel('corp');
+var News = gskse.getModel('news');
+var Report = gskse.getModel('report');
+var Stock = gskse.getModel('stock');
 
-var corp_revenue = ((count, click) => Math.round(count * ((click + 0.1) ** 1.2) * 3000));
+var corp_revenue = ((count, click) => Math.round(count * ((click + 0.1) ** 1.2) * 3000)),
 	corp_tax = 0.2,  // of revenue
 	corp_earning = 0.5 * (1 - corp_tax),  // of revenue
 	ceo_salary = 0.05 * (1 - corp_tax),  // of revenue

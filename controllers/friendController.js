@@ -1,6 +1,5 @@
 var debug = require('debug')('gskse:friendController');
-
-var Friend = require('../models/friend');
+var gskse = require('../config');
 
 var hasher = require('pbkdf2-password')();
 
@@ -8,7 +7,7 @@ var sharp = require('sharp');
 var Rusha = require('rusha');
 var rusha = new Rusha();
 
-var gskse = require('../config');
+var Friend = gskse.getModel('friend');
 
 exports.login = function(name, password) {
 	return Friend.findOne({ name: name }).then(doc => {

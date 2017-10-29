@@ -1,14 +1,14 @@
 var debug = require('debug')('gskse:corps:symbol');
 var router = require('express').Router();
 
-var Friend = getModel('friend');
-var Corp = getModel('corp');
-var News = getModel('news');
-var Order = getModel('order');
-var Stock = getModel('stock');
+var Friend = gskse.getModel('friend');
+var Corp = gskse.getModel('corp');
+var News = gskse.getModel('news');
+var Order = gskse.getModel('order');
+var Stock = gskse.getModel('stock');
 
-var corpController = getController('corpController');
-var friendController = getController('friendController');
+var corpController = gskse.getController('corpController');
+var friendController = gskse.getController('friendController');
 
 router.get('/', function(req, res, next) {
 	corpController.findNewses(res.locals.corp).then(newses => {
@@ -45,7 +45,11 @@ router.get('/conversations', function(req, res, next) {
 });
 
 router.get('/trade', function(req, res, next) {
-	res.render('corps/symbol/trade');
+	corpController.findOrders(res.locals.corp).then(orders => {
+		res.locals.asks = orders.asks;
+		res.locals.bids = orders.bids;
+		res.render('corps/symbol/trade');
+	});
 });
 
 router.post('/trade', function(req, res, next) {
@@ -56,7 +60,7 @@ router.post('/trade', function(req, res, next) {
 	req.body.duration = String(req.body.duration);
 
 	corpController.trade(res.locals.friend, res.locals.corp, req.body.quantity, req.body.price, req.body.action, req.body.type, req.body.duration).then(order => {
-		res.redirect(url_corps_symbol_trade(res.locals.corp.id));
+		res.redirect(url_corps_symbol_trade(res.locals.corp.symbol));
 	});
 });
 

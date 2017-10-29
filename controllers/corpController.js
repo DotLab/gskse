@@ -204,6 +204,32 @@ exports.offer = function(friend, corp, quantity, price) {
 	});
 };
 
+exports.findOrders = function(corp) {
+	return Promise.all([
+		Order.find({ 
+			corp: corp._id, 
+			action: 'sell',
+			type: { $in: [ 'limit', 'market' ] },
+			unfilled: { $gt: 0 },
+			is_aborted: false,
+		}).sort('type -price -placed').populate('friend'),
+	
+		Order.find({ 
+			corp: corp._id, 
+			action: 'buy',
+			type: { $in: [ 'limit', 'market' ] },
+			unfilled: { $gt: 0 },
+			is_aborted: false,
+		}).sort('-type -price placed').populate('friend'),
+	]).then(results => {
+		debug('asks [%d] : bids [%d]', results[0].length, results[1].length);
+		return {
+			asks: results[0],
+			bids: results[1],
+		};
+	});
+};
+
 exports.trade = function(friend, corp, quantity, price, action, type, duration) {
 	var self = this;
 

@@ -1,8 +1,8 @@
 var debug = require('debug')('gskse:corps');
 var router = require('express').Router();
 
-var friendController = getController('friendController');
-var corpController = getController('corpController');
+var friendController = gskse.getController('friendController');
+var corpController = gskse.getController('corpController');
 
 router.get('/register', function(req, res, next) {
 	res.render('corps/register');

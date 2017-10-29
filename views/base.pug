@@ -18,13 +18,13 @@
 		}),
 		setActive = (cond => cond && 'active');
 
-	var strInt = (val => val.toLocaleString('en', { style: 'decimal', minimumFractionDigits: 0, maximumFractionDigits: 0 })),
-		strFloat = (val => val.toLocaleString('en', { style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2 })),
-		strPercent = (val => strFloat(val * 100) + '%');
-		strSunshine = (val => '$' + strFloat(val)),
-		strDateTime = (date => date.toLocaleString(locale)),
-		strDate = (date => date.toLocaleDateString(locale)),
-		strTime = (date => date.toLocaleTimeString(locale));
+	var strInt = val => val == null ? '0' : val.toLocaleString('en', { style: 'decimal', minimumFractionDigits: 0, maximumFractionDigits: 0 }),
+		strFloat = val => val == null ? '0' : val.toLocaleString('en', { style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+		strPercent = val => (val == null ? '0' : strFloat(val * 100)) + '%';
+		strSunshine = val => '$' + (val == null ? '0' : strFloat(val)),
+		strDateTime = date => date == null ? '' : date.toLocaleString(locale),
+		strDate = date => date == null ? '' : date.toLocaleDateString(locale),
+		strTime = date => date == null ? '' : date.toLocaleTimeString(locale);
 
 block var1
 block var2
