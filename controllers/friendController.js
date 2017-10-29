@@ -12,11 +12,11 @@ var gskse = require('../config');
 
 exports.login = function(name, password) {
 	return Friend.findOne({ name: name }).then(doc => {
-		if (!doc) throw gskse.status.unauthorized;
+		if (!doc) throw gskse.status.unauthorized();
 
 		return new Promise((resolve, reject) => {
 			hasher({ password: password, salt: doc.salt }, function(err, pass, salt, hash) {
-				if (err || hash != doc.hash) return reject(gskse.status.unauthorized);
+				if (err || hash != doc.hash) return reject(gskse.status.unauthorized());
 				debug('user login [%s]', doc.name);
 				resolve(doc);
 			});
@@ -56,7 +56,7 @@ exports.signup = function(name, password, avataData) {
 };
 
 exports.pay = function(friend, amount) {
-	if (friend.cash <= amount) return Promise.reject(gskse.status.too_poor);
+	if (friend.cash <= amount) throw gskse.status.too_poor();
 	friend.cash -= amount;
 	return friend.save();
 };

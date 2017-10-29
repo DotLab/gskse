@@ -1,6 +1,7 @@
 var Friend = require('../models/friend');
+var Corp = require('../models/corp');
 
-before('connect to database', function(done) {
+before('connect to database', function() {
 	// mongoose ----------------------------------------------------------------------------------------------------
 	var mongoose = require('mongoose');
 	// mongoose.set('debug', true);
@@ -9,9 +10,5 @@ before('connect to database', function(done) {
 		useMongoClient: true,
 	}).then(db => {
 		db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-	});
-
-	Friend.remove({}, function() {
-		done();
 	});
 });

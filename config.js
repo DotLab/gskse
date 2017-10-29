@@ -75,13 +75,13 @@ exports.getOrderExpiration = d => {
 };
 
 exports.status = {
-	bad_request: 	{ status: 400, name: 'Bad Request', message: 'The server cannot or will not process the request due to an apparent client error (e.g., malformed request syntax, size too large, invalid request message framing, or deceptive request routing).' },
-	unauthorized: 	{ status: 401, name: 'Unauthorized', message: 'Similar to 403 Forbidden, but specifically for use when authentication is required and has failed or has not yet been provided. You do not have the necessary credentials.' },
-	too_poor: 		{ status: 402, name: 'Payment Required', message: 'You are too poor to complete the transaction.' },
-	forbidden: 		{ status: 403, name: 'Forbidden', message: 'The request was valid, but the server is refusing action. You might not have the necessary permissions for a resource, or may need an account of some sort.' },
-	not_found: 		{ status: 404, name: 'Not Found', message: 'The requested resource could not be found but may be available in the future. Subsequent requests by the client are permissible.' },
-	confilct: 		{ status: 409, name: 'Conflict', message: 'The request could not be processed because of conflict in the request, such as an edit conflict between multiple simultaneous updates.' },
+	bad_request: 	() => { var err = { status: 400, name: 'Bad Request', message: 'The server cannot or will not process the request due to an apparent client error (e.g., malformed request syntax, size too large, invalid request message framing, or deceptive request routing).' }; Error.captureStackTrace(err); return err; },
+	unauthorized: 	() => { var err = { status: 401, name: 'Unauthorized', message: 'Similar to 403 Forbidden, but specifically for use when authentication is required and has failed or has not yet been provided. You do not have the necessary credentials.' }; Error.captureStackTrace(err); return err; },
+	too_poor: 		() => { var err = { status: 402, name: 'Payment Required', message: 'You are too poor to complete the transaction.' }; Error.captureStackTrace(err); return err; },
+	forbidden: 		() => { var err = { status: 403, name: 'Forbidden', message: 'The request was valid, but the server is refusing action. You might not have the necessary permissions for a resource, or may need an account of some sort.' }; Error.captureStackTrace(err); return err; },
+	not_found: 		() => { var err = { status: 404, name: 'Not Found', message: 'The requested resource could not be found but may be available in the future. Subsequent requests by the client are permissible.' }; Error.captureStackTrace(err); return err; },
+	confilct: 		() => { var err = { status: 409, name: 'Conflict', message: 'The request could not be processed because of conflict in the request, such as an edit conflict between multiple simultaneous updates.' }; Error.captureStackTrace(err); return err; },
 
-	not_implemented: 	{ status: 501, name: 'Not Implemented', message: 'The server either does not recognize the request method, or it lacks the ability to fulfill the request. Usually this implies future availability (e.g., a new feature of a web-service API).' },
-	unavailable: 		{ status: 503, name: 'Service Unavailable', message: 'The server is currently unavailable (because it is overloaded or down for maintenance). Generally, this is a temporary state.' },
+	not_implemented: 	() => { var err = { status: 501, name: 'Not Implemented', message: 'The server either does not recognize the request method, or it lacks the ability to fulfill the request. Usually this implies future availability (e.g., a new feature of a web-service API).' }; Error.captureStackTrace(err); return err; },
+	unavailable: 		() => { var err = { status: 503, name: 'Service Unavailable', message: 'The server is currently unavailable (because it is overloaded or down for maintenance). Generally, this is a temporary state.' }; Error.captureStackTrace(err); return err; },
 };

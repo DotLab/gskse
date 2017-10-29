@@ -18,8 +18,8 @@ var CorpSchema = new Schema({
 	offer: 		helper.unsigned(),
 	price: 		helper.unsigned(),
 
-	life: 		helper.ref('Friend'),
 	ceo: 		helper.ref('Friend'),
+	life: 		helper.ref('Friend'),
 	founder: 	helper.ref('Friend'),
 
 	founded: 	helper.date(),

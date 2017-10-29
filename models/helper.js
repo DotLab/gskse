@@ -5,7 +5,7 @@ exports.localeOption = [ 'en', 'ja', 'zh-hans', 'zh-hant' ];
 
 exports.orderAction = [ 'buy', 'sell' ];
 exports.orderType = [ 'private', 'limit', 'market' ];
-exports.orderDuration = [ 'day', 'gtc', 'ioc', '1m', '2m', '5m' ];
+exports.orderDuration = [ 'day', 'gtc', 'ioc', '1m', '3m', '5m' ];
 
 exports.locale = function(schema) {
 	return exports.localeOption.reduce(function(obj, value) {
@@ -13,7 +13,7 @@ exports.locale = function(schema) {
 
 		return obj;
 	}, {});
-}
+};
 
 exports.unsigned = function() {
 	return { type: Number, required: true, min: 0 };
@@ -25,11 +25,11 @@ exports.boolean = function() {
 
 exports.date = function() {
 	return { type: Date, required: true };
-}
+};
 
 exports.ref = function(name) {
 	return { type: ObjectId, ref: name, required: true };
-}
+};
 
 exports.string = function() {
 	return { type: String, required: true };

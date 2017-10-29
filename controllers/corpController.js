@@ -1,25 +1,27 @@
 var debug = require('debug')('gskse:corpController');
 
-var Friend = getModel('friend');
-var Corp = getModel('corp');
-var News = getModel('news');
-var Tick = getModel('tick');
-var Order = getModel('order');
-var Stock = getModel('stock');
-var Report = getModel('report');
+var Friend = require('../models/friend');
+var Corp = require('../models/corp');
+var News = require('../models/news');
+var Tick = require('../models/tick');
+var Order = require('../models/order');
+var Stock = require('../models/stock');
+var Report = require('../models/report');
 
 var sharp = require('sharp');
 var Rusha = require('rusha');
 var rusha = new Rusha();
 
-var friendController = getController('friendController');
+var friendController = require('../controllers/friendController');
+
+var gskse = require('../config');
 
 exports.register = function(friend, name, desc, symbol, locale, avatarData) {
 	var self = this;
 
 	return Promise.resolve(rusha.digestFromBuffer(avatarData)).then(sha1 => {
 		self.avatar = sha1 + '.jpeg';
-		return sharp(avatarData).resize(gskse.avatarWidth, gskse.avatarHeight).jpeg().toFile(getUploadPath(self.avatar));
+		return sharp(avatarData).resize(gskse.avatarWidth, gskse.avatarHeight).jpeg().toFile(gskse.getUploadPath(self.avatar));
 	}).then(info => {
 		return Corp.create({
 			avatar: self.avatar,
@@ -36,8 +38,8 @@ exports.register = function(friend, name, desc, symbol, locale, avatarData) {
 			offer: 0,
 			price: 1,  // before ipo
 
-			life: gskse.ghost,
 			ceo: friend.id,
+			life: gskse.ghost,
 			founder: friend.id,
 
 			founded: Date.now(),
@@ -76,9 +78,11 @@ exports.findHolderStocks = function(corp) {
 };
 
 var findStockOrCreateOne = function(friend, corp) {
-	debug('create stock [%s] for [%s]', corp.name, friend.name);
+	debug('create stock [%s] for [%s]', corp.symbol, friend.name);
 	return findStockOrCreateOneById(friend._id, corp._id);
 };
+
+exports.findStockOrCreateOne = findStockOrCreateOne;
 
 var findStockOrCreateOneById = function(friendId, corpId) {
 	return Stock.findOne({ friend: friendId, corp: corpId }).then(stock => {
@@ -96,9 +100,11 @@ var findStockOrCreateOneById = function(friendId, corpId) {
 };
 
 var createTick = function(corp, buyer, seller, quantity, price) {
-	debug('deal [%s] buy from [%s] for [%s] [%d] x [%d]', buyer.name, seller.name, corp.symbol, quantity, price);
+	debug('deal [%s] buy from [%s] for [%s] [%d] x [%d]', buyer.name, seller.name, corp.symbol, price, quantity);
 	return createTickById(corp._id, buyer._id, seller._id, quantity, price);
 };
+
+exports.createTick = createTick;
 
 var createTickById = function(corpId, buyerId, sellerId, quantity, price) {
 	return Tick.create({
@@ -115,47 +121,71 @@ var createTickById = function(corpId, buyerId, sellerId, quantity, price) {
 };
 
 exports.invest = function(friend, corp, quantity) {
-	return Order.create({
-		friend: friend._id,
-		corp: corp._id,
+	if (corp.is_public) throw gskse.status.bad_request();
 
-		quantity: quantity,
-		unfilled: 0,
+	var self = this;
+	self.friend = friend;
+	self.corp = corp;
+	self.quantity = quantity;
+
+	return Order.create({
+		friend: self.friend._id,
+		corp: self.corp._id,
+
+		quantity: self.quantity,
+		unfilled: self.quantity,
 
 		action: 'buy',
 		type: 'private',
-		duration: 'gtc',
+		duration: 'ioc',
 
 		price: 1,
+		deal: 0,
 
 		placed: Date.now(),
-		filled: Date.now(),
-		expired: gskse.getOrderExpiration('gtc'),
+		filled: gskse.epoch,
+		expired: gskse.getOrderExpiration('ioc'),
 
 		is_aborted: false,
 	}).then(order => {
-		debug('invest [%s] <- [%d] by [%s]', corp.name, quantity, friend.name);
-		return findStockOrCreateOne(friend, corp);
+		self.order = order;
+		return friendController.pay(self.friend, self.quantity);
+	}).catch(err => {
+		if (err.name != gskse.status.too_poor().name) throw err;
+		self.order.is_aborted = true;
+		return self.order.save().then(order => {
+			throw err;
+		});
+	}).then(friend => {
+		debug('invest [%s] <- [%d] by [%s]', self.corp.symbol, self.quantity, self.friend.name);
+		return findStockOrCreateOne(self.friend, self.corp);
 	}).then(stock => {
-		corp.stock += quantity;
-		corp.save();
+		self.order.unfilled = 0;
+		self.order.deal = self.order.quantity;
+		self.order.filled = Date.now();
+		self.order.save();
 
-		debug('has [%d] spent [%d]', stock.quantity, stock.spent);
+		self.corp.stock += self.quantity;
+		self.corp.save();
+
+		debug('    has [%d] spent [%d]', stock.quantity, stock.spent);
 		stock.quantity += quantity;
 		stock.spent += quantity;
 		stock.save();
 
-		debug('stock change [$s] now holding [%s] [%d]', friend.name, corp.name, stock.quantity);
-		return createTickById(corp._id, friend._id, corp.life, quantity, 1);
+		debug('    stock change [%s] now holding [%s] [%d]', self.friend.name, self.corp.symbol, stock.quantity);
+		return createTickById(self.corp._id, self.friend._id, self.corp.life, self.quantity, 1);
+	}).then(tick => {
+		return self.order;
 	});
 };
 
 exports.offer = function(friend, corp, quantity, price) {
-	debug('offer [%s] of [%d] x [%d] by [%s]', corp.symbol, quantity, price, friend.name);
+	debug('offer [%s] of [%d] x [%d] by [%s]', corp.symbol, price, quantity, friend.name);
 
 	if (friend.id != corp.ceo) {
-		debug('friend [%s], ceo [%s]', friend.id, corp.ceo);
-		return Promise.reject(gskse.status.unauthorized);
+		debug('    friend [%s] is not ceo [%s]', friend.id, corp.ceo);
+		return Promise.reject(gskse.status.unauthorized());
 	}
 
 	if (!corp.is_public) {  // ipo
@@ -169,7 +199,7 @@ exports.offer = function(friend, corp, quantity, price) {
 	return corp.save().then(corp => {
 		return findStockOrCreateOne(friend, corp);
 	}).then(stock => {
-	stock.lock_up = gskse.getOfferLockUp();
+		stock.lock_up = gskse.getOfferLockUp();
 		return stock.save();
 	});
 };
@@ -186,9 +216,10 @@ exports.trade = function(friend, corp, quantity, price, action, type, duration) 
 
 		action: action,
 		type: type,
-		duration: (type == 'market') ? 'ioc' : duration,
+		duration: duration,
 
 		price: (type == 'market') ? 0 : price,
+		deal: 0,
 
 		placed: Date.now(),
 		filled: gskse.epoch,
@@ -199,7 +230,11 @@ exports.trade = function(friend, corp, quantity, price, action, type, duration) 
 		self.order = order;
 		return matchOrder(corp);
 	}).catch(err => {
+		if (err != buyer_too_poor && err != seller_too_poor && err != no_order && err != no_trade) throw err;
 		debug('match order abort: [%s]', err);
+		return Order.findById(self.order._id);
+	}).then(order => {
+		self.order = order;
 		if (self.order.duration == 'ioc' && self.order.unfilled != 0) {  // ioc order not filled, abort
 			self.order.is_aborted = true;
 			self.order.save();
@@ -208,10 +243,15 @@ exports.trade = function(friend, corp, quantity, price, action, type, duration) 
 	});
 };
 
+var buyer_too_poor = 'buyer too poor',
+	seller_too_poor = 'seller too poor',
+	no_order = 'no order',
+	no_trade = 'no trade';
+
 var matchOrder = function(corp) {
 	var self = this;
 	self.corp = corp;
-	debug('corp [%s]', self.corp.symbol);
+	debug('match order for corp [%s]', self.corp.symbol);
 
 	return Promise.all([
 		Order.findOne({ 
@@ -242,16 +282,16 @@ var matchOrder = function(corp) {
 
 		if (!self.bid || !self.ask) {
 			debug('    no order');
-			throw 'No Order';
+			throw no_order;
 		}
 
-		debug('    bid [%d] x [%d]', self.bid.quantity, self.bid.price);
-		debug('    ask [%d] x [%d]', self.ask.quantity, self.ask.price);
-		debug('    last tick [%d] x [%d]', self.tick.quantity, self.tick.price);
+		debug('    bid [%d] x [%d]', self.bid.price, self.bid.quantity);
+		debug('    ask [%d] x [%d]', self.ask.price, self.ask.quantity);
+		debug('    last tick [%d] x [%d]', self.tick.price, self.tick.quantity);
 
-		if (self.bid.price < self.ask.price) {
+		if (self.bid.type == 'limit' && self.ask.type == 'limit' && self.bid.price < self.ask.price) {
 			debug('    no trade');
-			throw 'No Trade';
+			throw no_trade;
 		}
 
 		return Promise.all([
@@ -278,9 +318,11 @@ var matchOrder = function(corp) {
 		else self.price = (self.bid.price + self.ask.price) * 0.5;  // all limit order, trade at middle
 		self.amount = self.quantity * self.price;
 
-		checkViability(self.bid, self.ask, self.buyer, self.sellerStock, self.amount, self.quantity);
-		
+		return checkViability(self.bid, self.ask, self.buyer, self.sellerStock, self.amount, self.quantity);
+	}).then(ignored => {
 		self.bid.unfilled -= self.quantity;
+		self.bid.deal += self.amount;
+		checkFill(self.bid);
 		self.buyer.cash -= self.amount;
 		self.buyerStock.quantity += self.quantity;
 
@@ -289,10 +331,12 @@ var matchOrder = function(corp) {
 			// self.buyer.save(),
 			// self.buyerStock.save(),
 			Friend.findByIdAndUpdate(self.buyer._id, { $inc: { cash: -self.amount } }),
-			Stock.findByIdAndUpdate(self.buyerStock._id, { $inc: { quantity: self.amount } }),
+			Stock.findByIdAndUpdate(self.buyerStock._id, { $inc: { quantity: self.quantity } }),
 		]);
 	}).then(ignored => {
 		self.ask.unfilled -= self.quantity;
+		self.ask.deal += self.amount;
+		checkFill(self.ask);
 		self.seller.cash += self.amount;
 		self.sellerStock.quantity -= self.quantity;
 
@@ -301,7 +345,7 @@ var matchOrder = function(corp) {
 			// self.seller.save(),
 			// self.sellerStock.save(),
 			Friend.findByIdAndUpdate(self.seller._id, { $inc: { cash: self.amount } }),
-			Stock.findByIdAndUpdate(self.sellerStock._id, { $inc: { quantity: -self.amount } }),
+			Stock.findByIdAndUpdate(self.sellerStock._id, { $inc: { quantity: -self.quantity } }),
 		]);
 	}).then(ignored => {
 		return createTick(self.corp, self.buyer, self.seller, self.quantity, self.price);
@@ -315,17 +359,23 @@ var checkViability = function(bid, ask, buyer, sellerStock, buyAmount, sellQuant
 
 	if (buyer.cash < buyAmount) {  // buyer cannot paid for the stock
 		bid.is_aborted = true;
-		bid.save();
-
-		debug('buyer too poor');
-		throw 'Buyer Too Poor';
+		return bid.save().then(bid => {
+			debug('buyer too poor');
+			throw buyer_too_poor;
+		});
 	}
 
 	if (sellerStock.quantity < sellQuantity) {  // seller cannot sell the stock
 		ask.is_aborted = true;
-		ask.save();
-
-		debug('seller too poor');
-		throw 'Seller Too Poor';
+		return ask.save().then(ask => {
+			debug('seller too poor');
+			throw seller_too_poor;
+		});
 	}
+};
+
+var checkFill = function(order) {
+	if (Math.round(order.unfilled) != 0) return;
+	order.unfilled = 0;
+	order.filled = Date.now();
 };

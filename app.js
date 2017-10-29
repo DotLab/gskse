@@ -103,7 +103,7 @@ app.use('/', require(getPath('routes', 'root')));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-	next(gskse.status.not_found);
+	next(gskse.status.not_found());
 });
 
 // error handler

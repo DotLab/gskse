@@ -23,10 +23,10 @@ router.post('/register', function(req, res, next) {
 
 router.use('/:symbol', function(req, res, next) {
 	req.params.symbol = String(req.params.symbol);
-	if (!res.locals.friend) throw gskse.status.unauthorized
+	if (!res.locals.friend) throw gskse.status.unauthorized();
 
 	corpController.findCorp(req.params.symbol, res.locals.locale).then(corp => {
-		if (!corp) throw gskse.status.not_found;
+		if (!corp) throw gskse.status.not_found();
 		
 		res.locals.corp = corp;
 		res.locals.is_ceo = (res.locals.corp.ceo == res.locals.friend.id);

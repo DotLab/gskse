@@ -9,6 +9,12 @@ var friendController = require('../controllers/friendController');
 var Friend = require('../models/friend');
 
 describe('friendController', function() {
+	before('clear database', function(done) {
+		Promise.all([
+			Friend.remove({}),
+		]).then(() => done()).catch(err => done(err));
+	});
+
 	describe('::signup', function() {
 		it('can signup', function(done) {
 			sharp({ create: {
@@ -19,6 +25,7 @@ describe('friendController', function() {
 			} }).jpeg().toBuffer().then(data => {
 				return friendController.signup('Kailang', '123', data);
 			}).then(friend => {
+				should.exist(friend);
 				friend.name.should.be.exactly('Kailang');
 				friend.cash.should.be.exactly(gskse.startFund);
 				done();
@@ -29,6 +36,7 @@ describe('friendController', function() {
 	describe('::login', function() {
 		it('can login', function(done) {
 			friendController.login('Kailang', '123').then(friend => {
+				should.exist(friend);
 				done();
 			}).catch(err => done(err));
 		});
@@ -37,19 +45,23 @@ describe('friendController', function() {
 	describe('::pay', function() {
 		it('can pay', function(done) {
 			Friend.findOne({}).then(friend => {
+				should.exist(friend);
 				return friendController.pay(friend, 100);
 			}).then(friend => {
+				should.exist(friend);
 				friend.cash.should.be.within(0, gskse.startFund);
 				done();
 			}).catch(err => done(err));
 		});
 		it('cannot pay more than it has', function(done) {
 			Friend.findOne({}).then(friend => {
+				should.exist(friend);
 				return friendController.pay(friend, 1e20);
 			}).then(friend => {
+				should.exist(friend);
 				done(friend.cash);
 			}).catch(err => {
-				err.should.be.exactly(gskse.status.too_poor);
+				err.name.should.be.exactly(gskse.status.too_poor().name);
 				done();
 			});
 		});

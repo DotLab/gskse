@@ -8,7 +8,8 @@
 	],
 	"settings":
 	{
-		"tab_size": 4
+		"tab_size": 4,
+		"spell_check": true
 	},
 	"build_systems":
 	[

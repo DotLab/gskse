@@ -15,6 +15,7 @@ var OrderSchema = new Schema({
 	duration: 	helper.stringEnum(helper.orderDuration),
 
 	price: 		helper.unsigned(),
+	deal: 		helper.unsigned(),
 
 	placed: 	helper.date(),
 	filled: 	helper.date(),

@@ -11,7 +11,7 @@ describe('gskse', function() {
 
 	describe('::getCorpRevenueBreak', function() {
 		it('should be positive', function() {
-			debug(gskse.getCorpRevenueBreak(1000));
+			// debug(gskse.getCorpRevenueBreak(1000));
 			var result = gskse.getCorpRevenueBreak(1000);
 			result.tax.should.be.above(0);
 			result.ceo.should.be.above(0);
