@@ -7,6 +7,20 @@ exports.getModel = model => require(exports.getPath('models', model));
 exports.getController = model => require(exports.getPath('controllers', model));
 exports.getJob = job => require(exports.getPath('jobs', job));
 
+exports.getLastMidnight = function() { 
+	var d = new Date(); 
+	d.setHours(0, 0, 0, 0); 
+	return d; 
+};
+exports.getWeeksAgo = function(n) { 
+	var d = new Date(); 
+	d.setDate(d.getDate() - 7 * n); 
+	d.setHours(0, 0, 0, 0); 
+	return d; 
+};
+exports.get52WeekAgo = () => exports.getWeeksAgo(52);
+exports.get1WeekAgo = () => exports.getWeeksAgo(1);
+
 exports.epoch = new Date(0);
 exports.ghost = require('mongoose').Types.ObjectId('000000000000000000000000');
 
@@ -53,7 +67,7 @@ exports.getOfferLockUp = () => {
 exports.getOfferFund = f => Math.round(f * (1 - exports.offerCut));
 
 exports.getOrderExpiration = d => {
-	var date = new Date(Date.now());
+	var date = new Date();
 	switch (d) {
 		case 'day':
 			date.setDate(date.getDate() + 1);

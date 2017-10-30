@@ -3,6 +3,18 @@ var should = require('should');
 var gskse = require('../config');
 
 describe('gskse', function() {
+	describe('::getLastMidnight', function() {
+		it('should be in past', function() {
+			gskse.getLastMidnight().should.be.below(Date.now());
+		});
+	});
+
+	describe('::get52WeekAgo', function() {
+		it('should be in past', function() {
+			gskse.get52WeekAgo().should.be.below(Date.now());
+		});
+	});
+
 	describe('::getCorpRevenue', function() {
 		it('should be positive', function() {
 			gskse.getCorpRevenue(1, 1).should.be.above(0);

@@ -230,6 +230,56 @@ exports.findOrders = function(corp) {
 	});
 };
 
+exports.getQuote = function(corp) {
+	return Promise.all([
+		Tick.findOne({ corp: corp._id }).sort('-date'),  // last tick
+		Tick.findOne({ corp: corp._id, date: { $lt: gskse.getLastMidnight() } }).sort('-date'),  // close tick
+		Order.findOne({  // bid
+			corp: corp._id, 
+			action: 'buy', 
+			type: 'limit', 
+			unfilled: { $gt: 0 }, 
+			expired: { $gt: Date.now() },
+			is_aborted: false,
+		}).sort('-price placed'),
+		Order.findOne({  // ask
+			corp: corp._id, 
+			action: 'sell', 
+			type: 'limit', 
+			unfilled: { $gt: 0 }, 
+			expired: { $gt: Date.now() },
+			is_aborted: false,
+		}).sort('price placed'),
+		Tick.aggregate([  // day
+			{ $match: { date: { $gte: gskse.getLastMidnight() } } },
+			{ $group: {
+				_id: null,  // sum
+				low: { $min: '$price' },
+				high: { $max: '$price' },
+				volume: { $sum: '$quantity' },
+			} },
+		]),
+		Tick.aggregate([  // week
+			{ $match: { date: { $gte: gskse.get1WeekAgo() } } },
+			{ $group: {
+				_id: null,  // sum
+				low: { $min: '$price' },
+				high: { $max: '$price' },
+				volume: { $sum: '$quantity' },
+			} },
+		]),
+	]).then(results => {
+		return {
+			lastTick: results[0],
+			closeTick: results[1],
+			bid: results[2],
+			ask: results[3],
+			day: results[4][0],
+			week: results[5][0],
+		};
+	});	
+};
+
 exports.trade = function(friend, corp, quantity, price, action, type, duration) {
 	var self = this;
 

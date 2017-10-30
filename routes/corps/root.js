@@ -34,10 +34,12 @@ router.use('/:symbol', function(req, res, next) {
 		return Promise.all([
 			corpController.findStock(res.locals.friend, res.locals.corp),
 			corpController.findReports(res.locals.corp),
+			corpController.getQuote(res.locals.corp),
 		]);
 	}).then(results => {
 		var stock = results[0],
-			reports = results[1];
+			reports = results[1],
+			quote = results[2];
 
 		if (stock) {
 			res.locals.stock = stock;
@@ -45,6 +47,7 @@ router.use('/:symbol', function(req, res, next) {
 		}
 
 		res.locals.reports = reports;
+		res.locals.quote = quote;
 
 		next();
 	}).catch(err => next(err));

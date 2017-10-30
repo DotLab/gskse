@@ -246,6 +246,48 @@ describe('corpController', function() {
 		});
 	});
 
+	describe('::getQuote', function() {
+		beforeEach('clear ticks and orders', function(done) {
+			Promise.all([
+				Order.remove({}),
+				Tick.remove({}),
+			]).then(() => done());
+		});
+
+		it('can quote', function(done) {
+			Promise.all([
+				Tick.create({ corp: self.corp._id, buyer: self.friend._id, seller: self.friend._id, quantity: 9, price: 9, date: gskse.get1WeekAgo() }),
+				corpController.createTick(self.corp, self.friend, self.friend, 100, 2),
+				corpController.createTick(self.corp, self.friend, self.friend, 100, 3),
+				corpController.createTick(self.corp, self.friend, self.friend, 100, 4),
+				corpController.createTick(self.corp, self.friend, self.friend, 100, 5),
+				corpController.createTick(self.corp, self.friend, self.friend, 100, 6),
+				corpController.trade(self.friend, self.corp, 25, 19, 'sell', 'limit', 'day'),
+				corpController.trade(self.friend1, self.corp, 8, 5, 'buy', 'limit', '5m'),
+			]).then(results => {
+				return corpController.createTick(self.corp, self.friend, self.friend, 8, 8);
+			}).then(ignored => {
+				return corpController.getQuote(self.corp);
+			}).then(quote => {
+				quote.lastTick.quantity.should.be.exactly(8);
+				quote.lastTick.price.should.be.exactly(8);
+
+				quote.closeTick.quantity.should.be.exactly(9);
+				quote.closeTick.price.should.be.exactly(9);
+
+				quote.day.low.should.be.exactly(2);
+				quote.day.high.should.be.exactly(8);
+				quote.day.volume.should.be.exactly(508);
+
+				quote.week.low.should.be.exactly(2);
+				quote.week.high.should.be.exactly(9);
+				quote.week.volume.should.be.exactly(517);
+
+				done();
+			}).catch(err => done(err));
+		});
+	});
+
 	describe('::trade', function() {
 		beforeEach('clear orders', function(done) {
 			Order.remove({}).then(() => done());

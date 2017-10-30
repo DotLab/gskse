@@ -19,12 +19,12 @@ var app = express();
 app.set('views', gskse.getPath('views'));
 app.set('view engine', 'pug');
 
-// morgan ----------------------------------------------------------------------------------------------------
-// var morgan = require('morgan');
-// app.use(morgan('dev')); // log requests
-
 // static ----------------------------------------------------------------------------------------------------
 app.use(express.static(gskse.getPath('public')));
+
+// morgan ----------------------------------------------------------------------------------------------------
+var morgan = require('morgan');
+app.use(morgan('dev')); // log requests
 
 // bodyParser ----------------------------------------------------------------------------------------------------
 var bodyParser = require('body-parser');

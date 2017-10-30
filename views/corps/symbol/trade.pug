@@ -6,7 +6,7 @@ block var2
 
 block content
 	div
-		table.table.table-sm.table-dark
+		table.table.table-sm.table-dark.table-hover
 			thead
 				tr
 					th.text-center.small Friend
@@ -22,21 +22,21 @@ block content
 						td.small.text-center= order.friend.name
 						td.small.text-center= order.type
 						td.bg-cyan.small
-						td.small.text-right= order.type == 'market' ? '--' : strSunshine(order.price)
+						td.small.text-right= order.type == 'market' ? '--' : strFloat(order.price)
 						td.bg-red.small.text-center= strInt(order.unfilled) + ' / ' + strInt(order.quantity)
 						td.small.p-0
 							div.bg-green(style=`height: 29px; width: ${100.0 * (1 - (order.unfilled / order.quantity))}%`)
-						td.small.text-right= strSunshine(order.price * order.unfilled)
+						td.small.text-right= strFloat(order.price * order.unfilled)
 				for order in bids
 					tr
 						td.small.text-center= friend.name
 						td.small.text-center= order.type
 						td.bg-blue.small.text-center= strInt(order.unfilled) + ' / ' + strInt(order.quantity)
-						td.small.text-right= order.type == 'market' ? '--' : strSunshine(order.price)
+						td.small.text-right= order.type == 'market' ? '--' : strFloat(order.price)
 						td.bg-pink.small
 						td.small.p-0
 							div.bg-green(style=`height: 29px; width: ${100.0 * (1 - (order.unfilled / order.quantity))}%`)
-						td.small.text-right= strSunshine(order.price * order.unfilled)
+						td.small.text-right= strFloat(order.price * order.unfilled)
 
 	div.row
 		div.col-md-6
@@ -70,7 +70,7 @@ block content
 					label Price
 					div.input-group
 						span.input-group-addon $
-						input.form-control(type='number', name='price')
+						input.form-control(type='number', name='price', min='0', step='0.01')
 
 				div.form-group
 					label Duration

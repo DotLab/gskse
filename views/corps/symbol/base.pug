@@ -5,8 +5,9 @@ block main
 	if corp.is_public
 		hr.my-0
 
-		h2.h1.my-0= strFloat(corp.price)
-			span.ml-2.small(style='color: #090') +0.71 (+19.22%)
+		h2.h1.my-0= strFloat(quote.lastTick.price)
+			if quote.closeTick
+				span.ml-2.small #{strSignedFloat(quote.lastTick.price - quote.closeTick.price)} (+19.22%)
 
 		br
 	else
