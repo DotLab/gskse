@@ -254,8 +254,8 @@ exports.getQuote = function(corp) {
 			{ $match: { date: { $gte: gskse.getLastMidnight() } } },
 			{ $group: {
 				_id: null,  // sum
-				low: { $min: '$price' },
 				high: { $max: '$price' },
+				low: { $min: '$price' },
 				volume: { $sum: '$quantity' },
 			} },
 		]),
@@ -263,8 +263,8 @@ exports.getQuote = function(corp) {
 			{ $match: { date: { $gte: gskse.get1WeekAgo() } } },
 			{ $group: {
 				_id: null,  // sum
-				low: { $min: '$price' },
 				high: { $max: '$price' },
+				low: { $min: '$price' },
 				volume: { $sum: '$quantity' },
 			} },
 		]),
@@ -278,6 +278,29 @@ exports.getQuote = function(corp) {
 			week: results[5][0],
 		};
 	});	
+};
+
+exports.getOhlc = function(corp, startDate, endDate, interval) {
+	return Tick.aggregate([
+		{ $match: { date: { $gte: startDate, $lte: endDate } } },
+		{ $sort: { date: 1 } },
+		{ $group: {
+			_id: { $floor: { $divide: [ { $subtract: [ endDate, '$date' ] }, interval ] } },
+			high: { $max: '$price' },
+			low: { $min: '$price' },
+			open: { $first: '$price' },
+			close: { $last: '$price' },
+			volume: { $sum: '$quantity' },
+		} },
+		{ $sort: { _id: -1 } },
+		{ $addFields: {
+			// 1 2 3 4 5 (1, 5, 2)
+			//   |_1 |_0 (endDate - $date) / interval
+			//   |_2 |_0 (((endDate - $date) / interval) * interval)
+			//   \_3 \_5 (endDate - ((endDate - $date) / interval) * interval)
+			date: { $subtract: [ endDate, { $multiply: [ '$_id', interval ] } ] },
+		} },
+	]);
 };
 
 exports.trade = function(friend, corp, quantity, price, action, type, duration) {
@@ -363,7 +386,7 @@ var matchOrder = function(corp) {
 
 		debug('    bid [%d] x [%d]', self.bid.price, self.bid.quantity);
 		debug('    ask [%d] x [%d]', self.ask.price, self.ask.quantity);
-		debug('    last tick [%d] x [%d]', self.tick.price, self.tick.quantity);
+		if (self.tick) debug('    last tick [%d] x [%d]', self.tick.price, self.tick.quantity);
 
 		if (self.bid.type == 'limit' && self.ask.type == 'limit' && self.bid.price < self.ask.price) {
 			debug('    no trade');
@@ -388,7 +411,7 @@ var matchOrder = function(corp) {
 
 		self.quantity = Math.min(self.bid.unfilled, self.ask.unfilled);
 		// determine the transaction price:
-		if (self.bid.type == 'market' && self.ask.type == 'market') self.price = self.tick.price;  // all market order, trade at previous price
+		if (self.bid.type == 'market' && self.ask.type == 'market') self.price = self.tick ? self.tick.price : 1;  // all market order, trade at previous price
 		else if (self.bid.type == 'market') self.price = self.ask.price;  // bid is market, trade at ask
 		else if (self.ask.type == 'market') self.price = self.bid.price;  // ask is market, trade at bid
 		else self.price = (self.bid.price + self.ask.price) * 0.5;  // all limit order, trade at middle

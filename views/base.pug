@@ -19,9 +19,10 @@
 		setActive = (cond => cond && 'active');
 
 	var strInt = val => val == null ? '0' : val.toLocaleString('en', { style: 'decimal', minimumFractionDigits: 0, maximumFractionDigits: 0 }),
-		strSignedInt = val => (val < 0 ? '-' : '+') + strInt(val);
+		strSignedInt = val => (val > 0 ? '+' : '') + strInt(val);
 		strFloat = val => val == null ? '0' : val.toLocaleString('en', { style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2 }),
-		strSignedFloat = val => (val < 0 ? '-' : '+') + strFloat(val);
+		strSignedFloat = val => (val > 0 ? '+' : '') + strFloat(val);
+		strSignedPercent = val => (val > 0 ? '+' : '') + strPercent(val);
 		strPercent = val => (val == null ? '0' : strFloat(val * 100)) + '%';
 		strSunshine = val => '$' + (val == null ? '0' : strFloat(val)),
 		strDateTime = date => date == null ? '' : date.toLocaleString(locale),

@@ -21,6 +21,22 @@ exports.getWeeksAgo = function(n) {
 exports.get52WeekAgo = () => exports.getWeeksAgo(52);
 exports.get1WeekAgo = () => exports.getWeeksAgo(1);
 
+exports.getCurrentMinute = function() {
+	var d = new Date(); 
+	d.setSeconds(60, 0);
+	return d; 
+};
+exports.getCurrentHour = function() {
+	var d = new Date(); 
+	d.setMinutes(60, 0, 0); 
+	return d; 
+};
+exports.getCurrentDay = function() {
+	var d = new Date(); 
+	d.setHours(24, 0, 0, 0); 
+	return d; 
+};
+
 exports.epoch = new Date(0);
 exports.ghost = require('mongoose').Types.ObjectId('000000000000000000000000');
 

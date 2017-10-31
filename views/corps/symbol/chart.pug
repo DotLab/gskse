@@ -1,0 +1,232 @@
+extends base
+
+block var2
+	- title = corp.name
+	- nav = 'chart'
+
+block content
+	nav.nav.nav-tabs.small
+		a.nav-item.nav-link(class=setActive(query.interval == '1m'), href=url_corps_symbol_chart(corp.symbol) + '?interval=1m') 1m
+		a.nav-item.nav-link(class=setActive(query.interval == '2m'), href=url_corps_symbol_chart(corp.symbol) + '?interval=2m') 2m
+		a.nav-item.nav-link(class=setActive(query.interval == '5m'), href=url_corps_symbol_chart(corp.symbol) + '?interval=5m') 5m
+		a.nav-item.nav-link(class=setActive(query.interval == '15m'), href=url_corps_symbol_chart(corp.symbol) + '?interval=15m') 15m
+		a.nav-item.nav-link(class=setActive(query.interval == '30m'), href=url_corps_symbol_chart(corp.symbol) + '?interval=30m') 30m
+		a.nav-item.nav-link(class=setActive(query.interval == '1h'), href=url_corps_symbol_chart(corp.symbol) + '?interval=1h') 1h
+		a.nav-item.nav-link(class=setActive(query.interval == '1d'), href=url_corps_symbol_chart(corp.symbol) + '?interval=1d') 1d
+	div#chart_k(style='width: 100%; height:30rem')
+	pre#dump
+	
+block foot2
+	script.
+		data = JSON.parse('!{JSON.stringify(ohlc.map(a => ([ a.open, a.close, a.low, a.high ])))}');
+		volume = JSON.parse('!{JSON.stringify(ohlc.map((a, i) => ([ i, a.volume, (i == 0 ? 0 : Math.sign(a.close - ohlc[i - 1].close)) ])))}');
+		xAxis = JSON.parse('!{JSON.stringify(ohlc.map(a => strTime(a.date)))}');
+
+		function calculateMA(dayCount) {
+			var result = [], lastValid = 0;
+			for (var i = 0, len = data.length; i < len; i++) {
+				if (i < dayCount) {
+					result.push('-');
+					continue;
+				}
+
+				var sum = 0;
+				for (var j = 0; j < dayCount; j++) {
+					if (data[i - j][0] != '-') lastValid = data[i - j][1];
+					sum += lastValid;
+				}
+				result.push(sum / dayCount);
+			}
+			return result;
+		}
+
+		$('#dump').text(JSON.stringify(data) + '\n' + JSON.stringify(xAxis, null, '\t'));
+
+		var upColor = '#ec0000';
+		var upBorderColor = '#8A0000';
+		var downColor = '#00da3c';
+		var downBorderColor = '#008F28';
+		var zeroColor = '#000000';
+
+		option = {
+			legend: { data: [ 'CC', 'MA5', 'MA10', 'MA20', 'MA30', 'Volume' ] },
+			tooltip: {
+				trigger: 'axis',
+				axisPointer: {
+					type: 'cross',
+				},
+			},
+			axisPointer: {
+				link: { xAxisIndex: 'all' },
+			},
+			visualMap: {
+				show: false,
+				seriesIndex: 5,
+				dimension: 2,
+				pieces: [ {
+					value: 1,
+					color: upColor
+				}, {
+					value: 0,
+					color: zeroColor
+				}, {
+					value: -1,
+					color: downColor
+				} ],
+			},
+			grid: [
+				{
+					left: '5%',
+					right: '5%',
+					top: '5%',
+					height: '70%',
+				},
+				{
+					left: '5%',
+					right: '5%',
+					top: '80%',
+					bottom: '5%',
+				},
+			],
+			xAxis: [
+				{
+					type: 'category',
+					data: xAxis,
+					scale: true,
+					axisLabel: {show: false},
+					//- axisLine: {show: false},
+					//- axisTick: {show: false},
+					boundaryGap : false,
+					min: 'dataMin',
+					max: 'dataMax',
+				},
+				{
+					type: 'category',
+					gridIndex: 1,
+					data: xAxis,
+					scale: true,
+					boundaryGap : false,
+					min: 'dataMin',
+					max: 'dataMax',
+				},
+			],
+			yAxis: [
+				{
+					scale: true,
+					splitArea: { show: true },
+				},
+				{
+					scale: true,
+					gridIndex: 1,
+					splitNumber: 2,
+					splitArea: { show: true },
+				},
+			],
+			//- dataZoom: [ 
+			//- 	{
+			//- 		type: 'inside',
+			//- 		xAxisIndex: [ 0, 1 ],
+			//- 		start: 50,
+			//- 		end: 100,
+			//- 	}, 
+			//- 	{
+			//- 		show: true,
+			//- 		type: 'slider',
+			//- 		xAxisIndex: [ 0, 1 ],
+			//- 		top: '85%',
+			//- 		start: 50,
+			//- 		end: 100
+			//- 	}, 
+			//- ],
+			series: [ 
+				{
+					name: 'CC',
+					type: 'candlestick',
+					data: data,
+					itemStyle: {
+						normal: {
+							color: upColor,
+							color0: downColor,
+							borderColor: upBorderColor,
+							borderColor0: downBorderColor,
+						},
+					},
+					markLine: {
+						symbol: ['none', 'none'],
+						data: [ 
+							[ 
+								{
+									name: 'from lowest to highest',
+									type: 'min',
+									valueDim: 'lowest',
+									symbol: 'circle',
+									symbolSize: 10,
+									label: {
+										normal: { show: false },
+										emphasis: { show: false },
+									},
+								}, 
+								{
+									type: 'max',
+									valueDim: 'highest',
+									symbol: 'circle',
+									symbolSize: 10,
+									label: {
+										normal: { show: false },
+										emphasis: { show: false }
+									},
+								} 
+							], 
+							{
+								name: 'min line on close',
+								type: 'min',
+								valueDim: 'close'
+							}, 
+							{
+								name: 'max line on close',
+								type: 'max',
+								valueDim: 'close'
+							},
+						],
+					},
+				}, 
+				{
+					name: 'MA5',
+					type: 'line',
+					data: calculateMA(5),
+					smooth: true,
+					lineStyle: { normal: { opacity: 0.5 } },
+				}, 
+				{
+					name: 'MA10',
+					type: 'line',
+					data: calculateMA(10),
+					smooth: true,
+					lineStyle: { normal: { opacity: 0.5 } },
+				}, 
+				{
+					name: 'MA20',
+					type: 'line',
+					data: calculateMA(20),
+					smooth: true,
+					lineStyle: { normal: { opacity: 0.5 } },
+				}, 
+				{
+					name: 'MA30',
+					type: 'line',
+					data: calculateMA(30),
+					smooth: true,
+					lineStyle: { normal: { opacity: 0.5 } },
+				}, 
+				{
+					name: 'Volume',
+					type: 'bar',
+					xAxisIndex: 1,
+					yAxisIndex: 1,
+					data: volume,
+				}, 
+			],
+		};
+
+		chart_k = echarts.init(document.getElementById('chart_k'));
+		chart_k.setOption(option);

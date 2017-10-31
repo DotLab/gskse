@@ -7,7 +7,7 @@ block main
 
 		h2.h1.my-0= strFloat(quote.lastTick.price)
 			if quote.closeTick
-				span.ml-2.small #{strSignedFloat(quote.lastTick.price - quote.closeTick.price)} (+19.22%)
+				span.ml-2.small #{strSignedFloat(quote.lastTick.price - quote.closeTick.price)} (#{strSignedPercent((quote.lastTick.price - quote.closeTick.price) / quote.closeTick.price)})
 
 		br
 	else

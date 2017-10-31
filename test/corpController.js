@@ -288,9 +288,59 @@ describe('corpController', function() {
 		});
 	});
 
+	describe('::getOhlc', function() {
+		beforeEach('clear ticks', function(done) {
+			Promise.all([
+				Tick.remove({}),
+			]).then(() => done());
+		});
+
+		it('can calculate', function(done) {
+			Promise.all([
+				Tick.create({ corp: self.corp._id, buyer: self.friend._id, seller: self.friend._id, quantity: 70, price: 20, date: new Date('2017-10-30T04:00:02.100Z') }),
+				Tick.create({ corp: self.corp._id, buyer: self.friend._id, seller: self.friend._id, quantity: 10, price: 60, date: new Date('2017-10-30T04:00:04.030Z') }),
+				Tick.create({ corp: self.corp._id, buyer: self.friend._id, seller: self.friend._id, quantity: 10, price: 25, date: new Date('2017-10-30T04:00:10.000Z') }),
+				Tick.create({ corp: self.corp._id, buyer: self.friend._id, seller: self.friend._id, quantity: 10, price: 25, date: new Date('2017-10-30T04:00:30.020Z') }),
+
+				Tick.create({ corp: self.corp._id, buyer: self.friend._id, seller: self.friend._id, quantity: 20, price: 10, date: new Date('2017-10-30T04:01:04.200Z') }),
+				Tick.create({ corp: self.corp._id, buyer: self.friend._id, seller: self.friend._id, quantity: 20, price: 05, date: new Date('2017-10-30T04:01:06.030Z') }),
+				Tick.create({ corp: self.corp._id, buyer: self.friend._id, seller: self.friend._id, quantity: 10, price: 75, date: new Date('2017-10-30T04:01:50.040Z') }),
+				Tick.create({ corp: self.corp._id, buyer: self.friend._id, seller: self.friend._id, quantity: 50, price: 25, date: new Date('2017-10-30T04:01:50.100Z') }),
+
+				Tick.create({ corp: self.corp._id, buyer: self.friend._id, seller: self.friend._id, quantity: 05, price: 10, date: new Date('2017-10-30T04:02:05.004Z') }),
+				Tick.create({ corp: self.corp._id, buyer: self.friend._id, seller: self.friend._id, quantity: 13, price: 70, date: new Date('2017-10-30T04:02:05.300Z') }),
+				Tick.create({ corp: self.corp._id, buyer: self.friend._id, seller: self.friend._id, quantity: 80, price: 80, date: new Date('2017-10-30T04:02:30.050Z') }),
+				Tick.create({ corp: self.corp._id, buyer: self.friend._id, seller: self.friend._id, quantity: 02, price: 90, date: new Date('2017-10-30T04:02:30.900Z') }),
+
+				Tick.create({ corp: self.corp._id, buyer: self.friend._id, seller: self.friend._id, quantity: 06, price: 90, date: new Date('2017-10-30T04:03:03.050Z') }),
+				Tick.create({ corp: self.corp._id, buyer: self.friend._id, seller: self.friend._id, quantity: 74, price: 80, date: new Date('2017-10-30T04:03:10.400Z') }),
+				Tick.create({ corp: self.corp._id, buyer: self.friend._id, seller: self.friend._id, quantity: 20, price: 70, date: new Date('2017-10-30T04:03:20.006Z') }),
+
+				Tick.create({ corp: self.corp._id, buyer: self.friend._id, seller: self.friend._id, quantity: 33, price: 10, date: new Date('2017-10-30T04:04:03.050Z') }),
+				Tick.create({ corp: self.corp._id, buyer: self.friend._id, seller: self.friend._id, quantity: 67, price: 12, date: new Date('2017-10-30T04:04:40.400Z') }),
+			]).then(results => {
+				return corpController.getOhlc(self.corp, gskse.epoch, new Date('2017-10-30T04:05:00.000Z'), 60 * 1000);
+			}).then(ohlc => {
+				// debug(ohlc);
+				ohlc.should.have.length(5);
+
+				ohlc[0].should.deepEqual({ _id: 4, high: 60, low: 20, open: 20, close: 25, volume: 100, date: new Date('2017-10-30T04:01:00.000Z') });
+				ohlc[1].should.deepEqual({ _id: 3, high: 75, low: 05, open: 10, close: 25, volume: 100, date: new Date('2017-10-30T04:02:00.000Z') });
+				ohlc[2].should.deepEqual({ _id: 2, high: 90, low: 10, open: 10, close: 90, volume: 100, date: new Date('2017-10-30T04:03:00.000Z') });
+				ohlc[3].should.deepEqual({ _id: 1, high: 90, low: 70, open: 90, close: 70, volume: 100, date: new Date('2017-10-30T04:04:00.000Z') });
+				ohlc[4].should.deepEqual({ _id: 0, high: 12, low: 10, open: 10, close: 12, volume: 100, date: new Date('2017-10-30T04:05:00.000Z') });
+
+				done();
+			}).catch(err => done(err));
+		});
+	});
+
 	describe('::trade', function() {
-		beforeEach('clear orders', function(done) {
-			Order.remove({}).then(() => done());
+		beforeEach('clear ticks and orders', function(done) {
+			Promise.all([
+				Order.remove({}),
+				Tick.remove({}),
+			]).then(() => done());
 		});
 
 		it('buy sell at limit, filled, not aborted', function(done) {

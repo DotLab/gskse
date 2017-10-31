@@ -11,14 +11,54 @@ var corpController = gskse.getController('corpController');
 var friendController = gskse.getController('friendController');
 
 router.get('/', function(req, res, next) {
-	corpController.findNewses(res.locals.corp).then(newses => {
+	Promise.all([
+		corpController.findNewses(res.locals.corp),
+		corpController.getOhlc(res.locals.corp, new Date(0), gskse.getCurrentDay(), 60 * 60 * 1000),
+	]).then(results => {
+		var newses = results[0],
+			ohlc = results[1];
+
 		res.locals.newses = newses;
+		res.locals.ohlc = ohlc;
+
 		res.render('corps/symbol/index');
 	});
 });
 
 router.get('/chart', function(req, res, next) {
-	res.render('corps/symbol/chart');
+	req.query.interval = req.query.interval || '1m';
+
+	var interval;
+	switch (req.query.interval) {
+		case '1m':
+			interval = 1 * 60 * 1000;
+			break;
+		case '2m':
+			interval = 2 * 60 * 1000;
+			break;
+		case '5m':
+			interval = 5 * 60 * 1000;
+			break;
+		case '15m':
+			interval = 15 * 60 * 1000;
+			break;
+		case '30m':
+			interval = 30 * 60 * 1000;
+			break;
+		case '1h':
+			interval = 60 * 60 * 1000;
+			break;
+		case '1d':
+			/* fall through */
+		default:
+			interval = 24 * 60 * 60 * 1000;
+	}
+
+	corpController.getOhlc(res.locals.corp, new Date(0), gskse.getCurrentDay(), interval).then(ohlc => {
+		debug(ohlc);
+		res.locals.ohlc = ohlc;
+		res.render('corps/symbol/chart');
+	}).catch(err => next(err));
 });
 
 router.get('/profile', function(req, res, next) {
