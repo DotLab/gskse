@@ -9,6 +9,14 @@ var sharp = require('sharp');
 var Rusha = require('rusha');
 var rusha = new Rusha();
 
+router.get('/', function(req, res, next) {
+	News.find({}).then(newses => {
+		res.locals.newses = newses;
+
+		res.render('news/index');
+	});
+});
+
 router.get('/post', function(req, res, next) {
 	res.render('news/post');
 });

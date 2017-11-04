@@ -14,9 +14,13 @@ var CorpSchema = new Schema({
 	cash: 		helper.unsigned(),
 	revenue: 	helper.unsigned(),
 
-	stock: 		helper.unsigned(),
-	offer: 		helper.unsigned(),
-	price: 		helper.unsigned(),
+	stock: 		helper.unsigned(),  // total stocks offered
+	offer: 		helper.unsigned(),  // current public offering
+	price: 		helper.unsigned(),  // current public offering price
+
+	close: 		helper.unsigned(),  // last close stock price
+	current: 	helper.unsigned(),  // current stock price
+	volume: 	helper.unsigned(),  // volume
 
 	ceo: 		helper.ref('Friend'),
 	life: 		helper.ref('Friend'),

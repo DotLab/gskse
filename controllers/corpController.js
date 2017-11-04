@@ -38,6 +38,10 @@ exports.register = function(friend, name, desc, symbol, locale, avatarData) {
 			offer: 0,
 			price: 1,  // before ipo
 
+			close: 1,  // before ipo
+			current: 1,
+			volume: 0,
+
 			ceo: friend.id,
 			life: gskse.ghost,
 			founder: friend.id,
@@ -107,6 +111,8 @@ var createTick = function(corp, buyer, seller, quantity, price) {
 exports.createTick = createTick;
 
 var createTickById = function(corpId, buyerId, sellerId, quantity, price) {
+	var self = this;
+
 	return Tick.create({
 		corp: corpId,
 		
@@ -117,6 +123,9 @@ var createTickById = function(corpId, buyerId, sellerId, quantity, price) {
 		price: price,
 
 		date: Date.now(),
+	}).then(tick => {
+		self.tick = tick;
+		return Corp.findByIdAndUpdate(corpId, { $set: { current: price }, $inc: { volume: quantity } });
 	});
 };
 
@@ -211,6 +220,7 @@ exports.findOrders = function(corp) {
 			action: 'sell',
 			type: { $in: [ 'limit', 'market' ] },
 			unfilled: { $gt: 0 },
+			expired: { $gt: Date.now() },
 			is_aborted: false,
 		}).sort('type -price -placed').populate('friend'),
 	
@@ -219,6 +229,7 @@ exports.findOrders = function(corp) {
 			action: 'buy',
 			type: { $in: [ 'limit', 'market' ] },
 			unfilled: { $gt: 0 },
+			expired: { $gt: Date.now() },
 			is_aborted: false,
 		}).sort('-type -price placed').populate('friend'),
 	]).then(results => {

@@ -1,0 +1,62 @@
+extends base
+
+mixin corpTable(corps)
+	table.table.table-sm.table-hover
+		thead
+			tr
+				td.small Avatar
+				th.small.font-weight-normal Symbol
+				th.small.font-weight-normal Price
+				th.small.font-weight-normal Change
+				th.small.font-weight-normal % Change
+				th.small.font-weight-normal Volume
+		tbody
+			for corp in corps
+				tr
+					td
+						img.rounded(src=getSrc(corp.avatar), style='width: 32px; height: 32px')
+					td.small.font-weight-bold.pb-3 
+						strong= corp.symbol
+						p.small.text-muted(style='position: absolute')= corp.name
+					td.small.font-weight-bold= strSunshine(corp.current)
+					td.small.font-weight-bold(style=styleSignColor(corp.current - corp.close))= strSignedSunshine(corp.current - corp.close) 
+					td.small.font-weight-bold(style=styleSignColor(corp.current - corp.close))= strSignedPercent((corp.current - corp.close) / corp.close)
+					td.small.font-weight-bold= strInt(corp.volume)
+
+block var2
+	- title = 'Register Corporation'
+
+block main					
+	h2 Markets
+	hr.mt-0
+	
+	div.row
+		div.col-lg-6
+			h2.h5.font-weight-normal Watchlist
+			+corpTable(watches)
+
+		div.col-lg-6
+			h2.h5.font-weight-normal Gainers
+			+corpTable(gainers)
+
+					
+			h2.h5.font-weight-normal Losers
+			+corpTable(losers)
+
+					
+			h2.h5.font-weight-normal Most Active
+			+corpTable(actives)
+	
+	h2.h5.font-weight-normal News
+	hr.mt-0
+	ul.list-unstyled
+		for news in newses
+			li.media.mb-4
+				a(href=url_news_id(news.id))
+					img.mr-3.rounded.d-none.d-md-block(src=getSrc(news.hero), height='100px')
+				div.media-body
+					p.small.text-muted.mb-1 News &bull; #[a(href=news.source)= getHost(news.source)] &bull; #{strDate(news.posted)}
+					h5.mb-1
+						a.text-dark(href=url_news_id(news.id))= news.title
+					p.small= getSummary(news.content)
+					p.small.text-muted= news.corp.symbol

@@ -55,7 +55,7 @@ router.get('/chart', function(req, res, next) {
 	}
 
 	corpController.getOhlc(res.locals.corp, new Date(0), gskse.getCurrentDay(), interval).then(ohlc => {
-		debug(ohlc);
+		// debug(ohlc);
 		res.locals.ohlc = ohlc;
 		res.render('corps/symbol/chart');
 	}).catch(err => next(err));
@@ -84,7 +84,19 @@ router.get('/conversations', function(req, res, next) {
 	res.render('corps/symbol/conversations');
 });
 
+function randomRange(min, max) {
+	return Math.random() * (max - min) + min;
+}
+
 router.get('/trade', function(req, res, next) {
+	corpController.trade(
+		res.locals.friend, 
+		res.locals.corp, 
+		Math.round(randomRange(10, 100)), 
+		randomRange(1, 10), 
+		Math.random() > 0.5 ? 'buy' : 'sell', 
+		Math.random() > 0.5 ? 'limit' : 'market', 'day');
+
 	corpController.findOrders(res.locals.corp).then(orders => {
 		res.locals.asks = orders.asks;
 		res.locals.bids = orders.bids;

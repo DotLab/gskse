@@ -1,0 +1,18 @@
+extends base
+
+block main
+	h2 Friends
+
+	table.table.table-sm.table-hover
+		thead
+			tr
+				td.text-muted Avatar
+				td.text-muted Name
+				td.text-muted.text-right Cash
+		tbody
+			for friend in friends
+				tr
+					th
+						img.rounded(src=getSrc(friend.avatar), style='width: 32px; height: 32px')
+					th= friend.name
+					th.text-right= strSunshine(friend.cash)

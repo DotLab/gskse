@@ -1,7 +1,17 @@
 var debug = require('debug')('gskse:friends');
 var router = require('express').Router();
 
+var Friend = gskse.getModel('friend');
+
 var friendController = gskse.getController('friendController');
+
+router.get('/', function(req, res, next) {
+	Friend.find({}).then(friends => {
+		res.locals.friends = friends;
+
+		res.render('friends/index');
+	});
+});
 
 router.get('/login', function(req, res, next) {
 	res.render('friends/login');

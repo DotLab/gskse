@@ -5,9 +5,10 @@ block main
 	if corp.is_public
 		hr.my-0
 
-		h2.h1.my-0= strFloat(quote.lastTick.price)
-			if quote.closeTick
-				span.ml-2.small #{strSignedFloat(quote.lastTick.price - quote.closeTick.price)} (#{strSignedPercent((quote.lastTick.price - quote.closeTick.price) / quote.closeTick.price)})
+		if quote.lastTick
+			h2.h1.my-0= strFloat(quote.lastTick.price)
+				if quote.closeTick
+					span.ml-2.small(style=styleSignColor(quote.lastTick.price - quote.closeTick.price)) #{strSignedFloat(quote.lastTick.price - quote.closeTick.price)} (#{strSignedPercent((quote.lastTick.price - quote.closeTick.price) / quote.closeTick.price)})
 
 		br
 	else
@@ -54,14 +55,14 @@ block main
 block foot1
 	if corp.is_public || is_holder
 		script.
-			xAxis = JSON.parse('!{JSON.stringify(reports.map(a => strDate(a.date)))}');
+			xAxis = JSON.parse('!{JSON.stringify(reports.map(a => strTime(a.date)))}');
 			data = JSON.parse('!{JSON.stringify(reports.map(a => a.earning))}');
 
 			option = {
 				grid: { show: true, top: '10%', bottom: '12%', left: '15%' },
 				tooltip: { },
 				xAxis: { data: xAxis },
-				yAxis: { },
+				yAxis: { splitArea: { show: true } },
 				series: [ {
 					name: 'Earning',
 					type: 'scatter',
@@ -78,7 +79,7 @@ block foot1
 				grid: { show: true, top: '10%', bottom: '12%', left: '15%' },
 				tooltip: { },
 				xAxis: { data: xAxis },
-				yAxis: { },
+				yAxis: { splitArea: { show: true } },
 				series: [ {
 					name: 'Revenue',
 					type: 'bar',

@@ -1,8 +1,36 @@
 var debug = require('debug')('gskse:corps');
 var router = require('express').Router();
 
+var Corp = gskse.getModel('corp');
+var Stock = gskse.getModel('stock');
+var News = gskse.getModel('news');
+
 var friendController = gskse.getController('friendController');
 var corpController = gskse.getController('corpController');
+
+router.get('/', function(req, res, next) {
+	Promise.all([
+		Stock.find({ friend: res.locals.friend._id, quantity: { $gt: 0 } }).sort('-quantity').populate('corp'),  // watch lists
+		Corp.find().sort('-volume').limit(5),  // active 
+		Corp.find().sort('-change').limit(5),  // gainers 
+		Corp.find().sort('change').limit(5),  // losers 
+		News.find().sort('-date').limit(5),
+	]).then(results => {
+		var stocks = results[0],
+			actives = results[1],
+			gainers = results[2],
+			losers = results[3],
+			newses = results[4];
+
+		res.locals.watches = stocks.map(a => a.corp);
+		res.locals.actives = actives;
+		res.locals.gainers = gainers;
+		res.locals.losers = losers;
+		res.locals.newses = newses;
+
+		res.render('corps/index');
+	}).catch(err => next(err));
+});
 
 router.get('/register', function(req, res, next) {
 	res.render('corps/register');

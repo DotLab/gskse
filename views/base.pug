@@ -19,15 +19,20 @@
 		setActive = (cond => cond && 'active');
 
 	var strInt = val => val == null ? '0' : val.toLocaleString('en', { style: 'decimal', minimumFractionDigits: 0, maximumFractionDigits: 0 }),
-		strSignedInt = val => (val > 0 ? '+' : '') + strInt(val);
 		strFloat = val => val == null ? '0' : val.toLocaleString('en', { style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2 }),
-		strSignedFloat = val => (val > 0 ? '+' : '') + strFloat(val);
-		strSignedPercent = val => (val > 0 ? '+' : '') + strPercent(val);
-		strPercent = val => (val == null ? '0' : strFloat(val * 100)) + '%';
+		strPercent = val => (val == null ? '0' : strFloat(val * 100)) + '%',
 		strSunshine = val => '$' + (val == null ? '0' : strFloat(val)),
+
+		strSignedInt = val => (val > 0 ? '+' : '') + strInt(val),
+		strSignedFloat = val => (val > 0 ? '+' : '') + strFloat(val),
+		strSignedPercent = val => (val > 0 ? '+' : '') + strPercent(val),
+		strSignedSunshine = val => (val > 0 ? '+' : '') + strSunshine(val),
+		
 		strDateTime = date => date == null ? '' : date.toLocaleString(locale),
 		strDate = date => date == null ? '' : date.toLocaleDateString(locale),
 		strTime = date => date == null ? '' : date.toLocaleTimeString(locale);
+
+	var styleSignColor = val => 'color: ' + (val > 0 ? '#090' : '#C1272D');
 
 block var1
 block var2

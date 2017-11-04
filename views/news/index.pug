@@ -1,0 +1,15 @@
+extends base
+
+block main
+	h2 News
+	hr.mt-0
+
+	for news in newses
+		li.media.mb-4
+			a(href=url_news_id(news.id))
+				img.mr-3.rounded.d-none.d-md-block(src=getSrc(news.hero), height='100px')
+			div.media-body
+				p.small.text-muted.mb-1 News &bull; #[a(href=news.source)= getHost(news.source)] &bull; #{strDate(news.posted)}
+				h5.mb-1
+					a.text-dark(href=url_news_id(news.id))= news.title
+				p.small= getSummary(news.content)

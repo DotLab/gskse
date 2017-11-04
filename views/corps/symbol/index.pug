@@ -13,7 +13,7 @@ block content
 						if quote.closeTick
 							tr
 								td Previous Close
-								th.text-right= strInt(quote.closeTick.price)
+								th.text-right= strFloat(quote.closeTick.price)
 						if quote.bid
 							tr
 								td Bid
@@ -22,22 +22,24 @@ block content
 							tr
 								td Ask
 								th.text-right #{strFloat(quote.ask.price)} x #{strInt(quote.ask.unfilled)}
-						tr
-							td Day's Range
-							th.text-right #{strFloat(quote.day.low)} - #{strFloat(quote.day.high)}
-						tr
-							td Day's Volume
-							th.text-right= strInt(quote.day.volume)
-						tr
-							td Week's Range
-							th.text-right #{strFloat(quote.week.low)} - #{strFloat(quote.week.high)}
-						tr
-							td Week's Volume
-							th.text-right= strInt(quote.week.volume)
+						if quote.day
+							tr
+								td Range
+								th.text-right #{strFloat(quote.day.low)} - #{strFloat(quote.day.high)}
+							tr
+								td Volume
+								th.text-right= strInt(quote.day.volume)
+						if quote.week
+							tr
+								td Week's Range
+								th.text-right #{strFloat(quote.week.low)} - #{strFloat(quote.week.high)}
+							tr
+								td Week's Volume
+								th.text-right= strInt(quote.week.volume)
 						if quote.closeTick
 							tr
 								td Net Change
-								th.text-right= strSignedFloat(quote.lastTick.price - quote.closeTick.price)
+								th.text-right(style=styleSignColor(quote.lastTick.price - quote.closeTick.price))= strSignedFloat(quote.lastTick.price - quote.closeTick.price)
 			div.col-lg-8(style='height: 17rem')
 				div#chart_k(style='width: 100%; height:100%')
 

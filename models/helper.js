@@ -19,6 +19,10 @@ exports.unsigned = function() {
 	return { type: Number, required: true, min: 0 };
 };
 
+exports.signed = function() {
+	return { type: Number, required: true };
+};
+
 exports.boolean = function() {
 	return { type: Boolean, required: true };
 };

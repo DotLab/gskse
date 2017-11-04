@@ -12,6 +12,8 @@ var corp_revenue = ((count, click) => Math.round(count * ((click + 0.1) ** 1.2) 
 	ceo_salary = 0.05 * (1 - corp_tax),  // of revenue
 	ceo_tax = 0.2;  // of salary
 
+var corpController = gskse.getController('corpController');
+
 module.exports = function() {
 	debug('calculate profit');
 

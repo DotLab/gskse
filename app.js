@@ -5,7 +5,7 @@ global.gskse = require('./config');
 
 // mongoose ----------------------------------------------------------------------------------------------------
 var mongoose = require('mongoose');
-// mongoose.set('debug', true);
+mongoose.set('debug', true);
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost:27017/gskse', {
 	useMongoClient: true,
@@ -102,8 +102,10 @@ app.use(function(err, req, res, next) {
 
 // cron ----------------------------------------------------------------------------------------------------
 var Job = require('cron').CronJob;
-new Job('0 * * * * *', gskse.getJob('calculateCorpProfit'), null, true, 'America/Los_Angeles');
+new Job('*/10 * * * * *', gskse.getJob('calculateCorpProfit'), null, true, 'America/Los_Angeles');
 // new Job('*/20 * * * * *', gskse.getJob('calculateFriendValue'), null, true, 'America/Los_Angeles');
 // new Job('* * * * * *', gskse.getJob('matchOrder'), null, true, 'America/Los_Angeles');
+// new Job('* * * * * *', gskse.getJob('matchOrder'), null, true, 'America/Los_Angeles');
+new Job('0 * * * * *', gskse.getJob('prepareDay'), null, true, 'America/Los_Angeles');
 
 module.exports = app;
